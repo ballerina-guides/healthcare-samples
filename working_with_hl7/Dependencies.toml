@@ -115,9 +115,23 @@ modules = [
 ]
 
 [[package]]
-org = "ballerinax"
-name = "health.hl7v2"
-version = "1.0.0"
+org = "healthcare_samples"
+name = "working_with_hl7"
+version = "0.1.0"
+dependencies = [
+	{org = "ballerina", name = "io"},
+	{org = "ballerinai", name = "observe"},
+	{org = "wso2healthcare", name = "healthcare.hl7"},
+	{org = "wso2healthcare", name = "healthcare.hl7v23"}
+]
+modules = [
+	{org = "healthcare_samples", packageName = "working_with_hl7", moduleName = "working_with_hl7"}
+]
+
+[[package]]
+org = "wso2healthcare"
+name = "healthcare.hl7"
+version = "0.1.7"
 dependencies = [
 	{org = "ballerina", name = "log"},
 	{org = "ballerina", name = "regex"},
@@ -125,33 +139,19 @@ dependencies = [
 	{org = "ballerina", name = "time"}
 ]
 modules = [
-	{org = "ballerinax", packageName = "health.hl7v2", moduleName = "health.hl7v2"}
+	{org = "wso2healthcare", packageName = "healthcare.hl7", moduleName = "healthcare.hl7"}
 ]
 
 [[package]]
-org = "ballerinax"
-name = "health.hl7v23"
-version = "1.0.0"
+org = "wso2healthcare"
+name = "healthcare.hl7v23"
+version = "0.1.14"
 dependencies = [
 	{org = "ballerina", name = "log"},
 	{org = "ballerina", name = "regex"},
-	{org = "ballerinax", name = "health.hl7v2"}
+	{org = "wso2healthcare", name = "healthcare.hl7"}
 ]
 modules = [
-	{org = "ballerinax", packageName = "health.hl7v23", moduleName = "health.hl7v23"}
-]
-
-[[package]]
-org = "healthcare_samples"
-name = "working_with_hl7"
-version = "0.1.0"
-dependencies = [
-	{org = "ballerina", name = "io"},
-	{org = "ballerinai", name = "observe"},
-	{org = "ballerinax", name = "health.hl7v2"},
-	{org = "ballerinax", name = "health.hl7v23"}
-]
-modules = [
-	{org = "healthcare_samples", packageName = "working_with_hl7", moduleName = "working_with_hl7"}
+	{org = "wso2healthcare", packageName = "healthcare.hl7v23", moduleName = "healthcare.hl7v23"}
 ]
 

@@ -1,6 +1,6 @@
 import ballerina/io;
-import ballerinax/health.hl7v23;
-import ballerinax/health.hl7v2 as hl7;
+import wso2healthcare/healthcare.hl7 as hl7;
+import wso2healthcare/healthcare.hl7v23 as hl7v23;
 
 public function main() returns error? {
 
