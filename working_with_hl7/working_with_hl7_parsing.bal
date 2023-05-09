@@ -1,6 +1,6 @@
 import ballerina/io;
-import wso2healthcare/healthcare.hl7 as hl7;
-import wso2healthcare/healthcare.hl7v23 as hl7v23;
+import ballerinax/health.hl7v2 as hl7;
+import ballerinax/health.hl7v23 as hl7v23;
 
 public function main() returns error? {
 
@@ -20,7 +20,7 @@ public function main() returns error? {
     hl7:Message|hl7:GenericMessage|hl7:HL7Error parsedMsg = parser.parse(msgBytes);
 
     if parsedMsg is hl7:HL7Error {
-        io:println("Error occurred while parsing the received message. Details: "+ (parsedMsg.detail().message?:""));
+        io:println("Error occurred while parsing the received message. Details: ", parsedMsg.detail().message);
         return error("Error occurred while parsing the received message", parsedMsg);
     }
 
@@ -33,6 +33,6 @@ public function main() returns error? {
 
     hl7v23:ADT_A01 adtMsg = <hl7v23:ADT_A01>parsedMsg;
     hl7v23:XPN[] patientName = adtMsg.pid.pid5;
-    io:println("Patient Family Name: " + patientName[0].xpn1);
+    io:println("Family Name: ", patientName[0].xpn1);
 }
 
