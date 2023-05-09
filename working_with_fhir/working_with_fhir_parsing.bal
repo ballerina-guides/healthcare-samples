@@ -18,5 +18,5 @@ public function main() returns error? {
 
     // Access the parsed data
     fhir:HumanName[] names = patient.name ?: [];
-    io:println("Family name: " + (names[0].family ?: ""));
+    io:println("Family Name: ", names[0].family);
 }
