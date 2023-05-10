@@ -27,5 +27,5 @@ public function main() returns error? {
     // Get a patient resource by id using the initialized FHIR client
     fhirClient:FHIRResponse fhirResponse = check fhirConnectorObj->getById("Patient", "12724067");
     // Print the response
-    io:println("Cener EMR response: ", fhirResponse.'resource);
+    io:println("Cerner EMR response: ", fhirResponse.'resource);
 }
