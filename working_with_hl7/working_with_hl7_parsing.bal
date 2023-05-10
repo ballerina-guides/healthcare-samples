@@ -15,12 +15,9 @@ public function main() returns error? {
                 + "NK1|1|NUCLEAR^NELDA^W|SPO^SPOUSE||||NK^NEXT OF KIN\r"
                 + "PV1|1|I|2000^2012^01||||004777^ATTEND^AARON^A|||SUR||||ADM|A0|";
 
-    // TODO remove once the string input is supported
-    byte[] msgBytes = hl7:createHL7WirePayload(msg.toBytes());
-
     // Parse it
     hl7:HL7Parser parser = new ();
-    hl7:Message|hl7:GenericMessage|hl7:HL7Error parsedMsg = parser.parse(msgBytes);
+    hl7:Message|hl7:GenericMessage|hl7:HL7Error parsedMsg = parser.parse(msg);
 
     if parsedMsg is hl7:HL7Error {
         io:println("Error occurred while parsing the received message. Details: ", parsedMsg.detail().message);
