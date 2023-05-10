@@ -28,4 +28,12 @@ public function main() returns error? {
     fhirClient:FHIRResponse fhirResponse = check fhirConnectorObj->getById("Patient", "12724067");
     // Print the response
     io:println("Cerner EMR response: ", fhirResponse.'resource);
+
+    // Search for patients who has the given name "John" and birthdate greater than 2000-01-01
+    fhirClient:FHIRResponse searchResponse = check fhirConnectorObj->search("Patient", {
+        "given": "John",
+        "birthdate": "gt2000-01-01"
+    });
+    // Print the response
+    io:println("Cerner EMR search response: ", searchResponse.'resource);
 }
