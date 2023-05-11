@@ -5,12 +5,12 @@ import ballerina/io;
 public function main() returns error? {
 
     // The following example is a simple serialized Patient resource to parse
-    string input = "{" +
-    "\"resourceType\" : \"Patient\"," +
-    "  \"name\" : [{" +
-    "    \"family\": \"Simpson\"" +
-    "  }]" +
-    "}";
+    json input = {
+        "resourceType" : "Patient",
+        "name" : [{
+            "family": "Simpson"
+        }]
+    };
 
     // Parse it - you can pass the input string or a json as input and the 
     // type of the resource you want to parse.
