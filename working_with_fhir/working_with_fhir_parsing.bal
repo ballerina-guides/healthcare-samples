@@ -1,22 +1,17 @@
+import ballerina/io;
 import ballerinax/health.fhir.r4.parser as fhirParser;
 import ballerinax/health.fhir.r4 as fhir;
-import ballerina/io;
 
-public function main() returns error? {
+final string patientData = string `{"resourceType" : "Patient", "name" : [{"family" : "Simpson"}]}`;
 
-    // The following example is a simple serialized Patient resource to parse
-    string input = "{" +
-    "\"resourceType\" : \"Patient\"," +
-    "  \"name\" : [{" +
-    "    \"family\": \"Simpson\"" +
-    "  }]" +
-    "}";
-
-    // Parse it - you can pass the input string or a json as input and the 
-    // type of the resource you want to parse.
+public function main(string input = patientData) returns error? {
+    // Parse the input string to a FHIR Patient object
     fhir:Patient patient = check fhirParser:parse(input, fhir:Patient).ensureType();
 
     // Access the parsed data
-    fhir:HumanName[] names = patient.name ?: [];
-    io:println("Family Name: ", names[0].family);
+    fhir:HumanName[]? names = patient.name;
+    if names is () || names.length() == 0 {
+        return error("Failed to parse the names");
+    }
+    io:println("Family Name: ", names[0]);
 }
