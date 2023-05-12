@@ -5,10 +5,12 @@ import ballerinax/health.fhir.r4 as fhir;
 public function main() returns error? {
     // The following example is a simple serialized Patient resource to parse
     json input = {
-        "resourceType" : "Patient",
-        "name" : [{
-            "family": "Simpson"
-        }]
+        "resourceType": "Patient",
+        "name": [
+            {
+                "family": "Simpson"
+            }
+        ]
     };
 
     // Parse it - you can pass the input (as a string or a json) and the
