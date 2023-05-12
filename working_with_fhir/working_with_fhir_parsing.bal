@@ -2,8 +2,7 @@ import ballerina/io;
 import ballerinax/health.fhir.r4.parser as fhirParser;
 import ballerinax/health.fhir.r4 as fhir;
 
-final string patientData = string `{"resourceType" : "Patient", "name" : [{"family" : "Simpson"}]}`;
-
+public function main() returns error? {
     // The following example is a simple serialized Patient resource to parse
     json input = {
         "resourceType" : "Patient",
