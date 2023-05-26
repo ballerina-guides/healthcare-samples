@@ -11,7 +11,7 @@ BATMAN^ADAM^A^III||19610615|M||C|2222 HOME STREET^^GREENSBORO^NC^27401-1020|GL|
 ${"\r"}NK1|1|NUCLEAR^NELDA^W|SPO^SPOUSE||||NK^NEXT OF KIN${"\r"}PV1|1|I|2000^2012^01||||
 004777^ATTEND^AARON^A|||SUR||||ADM|A0|`;
 
-public function main(string input = msg) returns error? {
+public function main() returns error? {
     // This message, ADT^A01 is an HL7 data type consisting of several components, so we
     // will cast it as such. The ADT_A01 class extends from Message, providing specialized
     // accessors for ADT^A01's segments.
