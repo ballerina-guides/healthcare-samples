@@ -1,5 +1,5 @@
 # FHIR Connector Sample
-This sample demonstrate how to use pre-built FHIR connector to connect to 
+This sample demonstrate how to use the pre-built FHIR connector to connect to 
 Cerner EMR. 
 
 ## how to configure?

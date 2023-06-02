@@ -28,7 +28,7 @@ public function main() returns error? {
 }
 
 function adta01ToPatient(hl7v23:ADT_A01 adtA01) returns Patient => {
-    firstName: msg,
+    firstName: adtA01.pid.pid5[0].xpn2,
     lastName: adtA01.pid.pid5[0].xpn1,
     address: adtA01.pid.pid11[0].xad1,
     phoneNumber: adtA01.pid.pid13[0].xtn1
