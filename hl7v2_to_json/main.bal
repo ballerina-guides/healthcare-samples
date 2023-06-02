@@ -11,15 +11,26 @@ final string msg = "MSH|^~\\&|ADT1|GOOD HEALTH HOSPITAL|GHH LAB, INC.|GOOD HEALT
 "\rNK1|1|NUCLEAR^NELDA^W|SPO^SPOUSE||||NK^NEXT OF KIN$\rPV1|1|I|2000^2012^01||||" +
 "004777^ATTEND^AARON^A|||SUR||||ADM|A0|";
 
+// A custom patient record.
+type Patient record {
+    string firstName;
+    string lastName;
+    string address;
+    string phoneNumber;
+};
+
 public function main() returns error? {
-    // This message, ADT^A01 is an HL7 data type consisting of several components, so we
-    // will cast it as such. The ADT_A01 class extends from Message, providing specialized
-    // accessors for ADT^A01's segments.
-    //  
-    // Ballerina HL7 provides several versions of the ADT_A01 record type, each in a
-    // different package (note the import statement above) corresponding to the HL7
-    // version for the message.
+    // Parse the HL7 message and ensure that it is of type ADT_A01.
     hl7v23:ADT_A01 adtMsg = check hl7:parse(msg).ensureType(hl7v23:ADT_A01);
-    hl7v23:XPN[] patientName = adtMsg.pid.pid5;
-    io:println("Family Name: ", patientName[0].xpn1);
+    // transform the ADT_AO1 message to a custom patient record.
+    Patient patient = adta01ToPatient(adtMsg);
+    io:println("Custom patient json: ", patient.toJsonString());
 }
+
+function adta01ToPatient(hl7v23:ADT_A01 adtA01) returns Patient => {
+    firstName: adtA01.pid.pid5[0].xpn2,
+    lastName: adtA01.pid.pid5[0].xpn1,
+    address: adtA01.pid.pid11[0].xad1,
+    phoneNumber: adtA01.pid.pid13[0].xtn1
+};
+

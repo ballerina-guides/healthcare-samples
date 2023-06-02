@@ -144,7 +144,7 @@ modules = [
 
 [[package]]
 org = "healthcare_samples"
-name = "working_with_hl7"
+name = "hl7v2_to_json"
 version = "0.1.0"
 dependencies = [
 	{org = "ballerina", name = "io"},
@@ -153,6 +153,6 @@ dependencies = [
 	{org = "ballerinax", name = "health.hl7v23"}
 ]
 modules = [
-	{org = "healthcare_samples", packageName = "working_with_hl7", moduleName = "working_with_hl7"}
+	{org = "healthcare_samples", packageName = "hl7v2_to_json", moduleName = "hl7v2_to_json"}
 ]
 

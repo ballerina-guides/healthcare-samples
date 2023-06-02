@@ -5,4 +5,4 @@ This repository contains a collection of healthcare-related samples written in B
 You can build each of the Ballerina project by navigating to the project and running 
 following command;
 
-`bal run --sticky`
+`bal run`
