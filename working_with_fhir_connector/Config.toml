@@ -1,0 +1,6 @@
+# Cerner EMR connection parameters.
+base="https://fhir-ehr-code.cerner.com/r4/xxxx-xx-xxxxxxxx"
+tokenUrl="https://authorization.cerner.com/tenants/xxxx-xx-xxxxxxxx/protocols/oauth2/profiles/smart-v1/token" 
+clientId="xxxx-xx-xxxxxxxx" 
+clientSecret="xxxxxxxxxxxxxxxxxx" 
+scopes=[ "system/Patient.read", "system/Patient.create", "system/Observation.read" ]
