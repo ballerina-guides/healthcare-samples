@@ -21,6 +21,22 @@ public function main() returns error? {
     json v2tofhirResult = check v2tofhirr4:v2ToFhir(msg);
     io:println("Transformed FHIR message: ", v2tofhirResult.toString());
     io:println("------------------------------------------------------------------");
+
+    // You can also bind custom mapping function implementations by overriding 
+    // the default mapping functions. Following are the supported mapping functions. These functions are
+    // defined to map Hl7 segments to FHIR resources as per the standard mappings defined at 
+    // https://build.fhir.org/ig/HL7/v2-to-fhir/branches/master/segment_maps.html.
+    // Supported functions: Pv1ToPatient, Pv1ToEncounter, Nk1ToPatient, Pd1ToPatient, PidToPatient, Dg1ToCondition,
+    // ObxToObservation, ObrToDiagnosticReport, Al1ToAllerygyIntolerance, EvnToProvenance, MshToMessageHeader,
+    // Pv2ToEncounter, OrcToImmunization.
+    v2tofhirr4:V2SegmentToFhirMapper customMapper = {
+        pv1ToEncounter: pv1ToEncounter
+    };
+    // You can pass the custom mapper implementation as a function parameter to the v2ToFhir module.
+    v2tofhirResult = check v2tofhirr4:v2ToFhir(msg, customMapper);
+    io:println("Transformed FHIR message: ", v2tofhirResult.toString());
+    io:println("------------------------------------------------------------------");
+
     hl7:Message hl7msg = check v2tofhirr4:stringToHl7(msg);
     if (hl7msg is hl7v23:ADT_A01) {
         // v2tofhirr4 library exposes these low level functions as well,
@@ -31,3 +47,13 @@ public function main() returns error? {
         io:println("HL7v23 PID Patient Name: ", patientName[0].toString());
     }
 }
+
+# Custom mapping function for PV1 segment to Encounter resource.
+#
+# + pv1 - PV1 segment
+# + return - Encounter FHIR resource
+function pv1ToEncounter(v2tofhirr4:Pv1 pv1) returns r4:Encounter {
+    string encounterClass = pv1.pv12.toString() == "I" ? "inpatient encounter" : "ambulatory";
+    r4:Encounter encounter = {id: pv1.pv11.toString(), 'class: {display: encounterClass}, status: "in-progress"};
+    return encounter;
+};
