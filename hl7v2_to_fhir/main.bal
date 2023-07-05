@@ -47,7 +47,7 @@ public function main() returns error? {
     };
     // You can pass the custom mapper implementation as a function parameter to the v2ToFhir module.
     v2tofhirResult = check v2tofhirr4:v2ToFhir(msg, customMapper);
-    io:println("Transformed FHIR message: ", v2tofhirResult.toString());
+    io:println("Transformed FHIR message using the custom mapper: ", v2tofhirResult.toString());
     io:println("------------------------------------------------------------------");
 
 }
