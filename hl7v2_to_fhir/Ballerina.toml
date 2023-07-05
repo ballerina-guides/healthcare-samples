@@ -10,4 +10,9 @@ observabilityIncluded = true
 [[dependency]]
 org = "ballerinax"
 name = "health.hl7v2.utils.v2tofhirr4"
-version = "2.0.0"
+version = "2.0.1"
+
+[[dependency]]
+org = "ballerinax"
+name = "health.hl7v2commons"
+version = "1.0.0"
