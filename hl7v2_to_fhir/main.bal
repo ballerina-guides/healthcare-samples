@@ -3,6 +3,7 @@ import ballerinax/health.hl7v2.utils.v2tofhirr4;
 import ballerinax/health.hl7v2 as hl7;
 import ballerinax/health.hl7v23;
 import ballerinax/health.fhir.r4 as r4;
+import ballerinax/health.hl7v2commons as hl7types;
 
 final string msg =
 "MSH|^~\\&|ADT1|GOOD HEALTH HOSPITAL|GHH LAB, INC.|GOOD HEALTH" +
@@ -21,13 +22,42 @@ public function main() returns error? {
     json v2tofhirResult = check v2tofhirr4:v2ToFhir(msg);
     io:println("Transformed FHIR message: ", v2tofhirResult.toString());
     io:println("------------------------------------------------------------------");
+
+    // v2tofhirr4 library exposes these low level functions as well,
+    // In this case, by using stringToHl7 function you can pass a HL7v2 message string and get a parsed HL7v2 message model.
     hl7:Message hl7msg = check v2tofhirr4:stringToHl7(msg);
     if (hl7msg is hl7v23:ADT_A01) {
-        // v2tofhirr4 library exposes these low level functions as well,
         // if you want to work with HL7v2 segments directly.
         // Transform HL7v2 PID to FHIR R4 Patient Name.
         r4:HumanName[] patientName = v2tofhirr4:pidToPatientName(hl7msg.pid.pid5,
         hl7msg.pid.pid9);
         io:println("HL7v23 PID Patient Name: ", patientName[0].toString());
+        io:println("------------------------------------------------------------------");
     }
+
+    // You can also bind custom mapping function implementations by overriding 
+    // the default mapping functions. Following are the supported mapping functions. These functions are
+    // defined to map Hl7 segments to FHIR resources as per the standard mappings defined at 
+    // https://build.fhir.org/ig/HL7/v2-to-fhir/branches/master/segment_maps.html.
+    // Supported functions: Pv1ToPatient, Pv1ToEncounter, Nk1ToPatient, Pd1ToPatient, PidToPatient, Dg1ToCondition,
+    // ObxToObservation, ObrToDiagnosticReport, Al1ToAllerygyIntolerance, EvnToProvenance, MshToMessageHeader,
+    // Pv2ToEncounter, OrcToImmunization.
+    v2tofhirr4:V2SegmentToFhirMapper customMapper = {
+        pv1ToEncounter: pv1ToEncounter
+    };
+    // You can pass the custom mapper implementation as a function parameter to the v2ToFhir module.
+    v2tofhirResult = check v2tofhirr4:v2ToFhir(msg, customMapper);
+    io:println("Transformed FHIR message using the custom mapper: ", v2tofhirResult.toString());
+    io:println("------------------------------------------------------------------");
+
 }
+
+# Custom mapping function for PV1 segment to Encounter resource.
+#
+# + pv1 - PV1 segment
+# + return - Encounter FHIR resource
+function pv1ToEncounter(hl7types:Pv1 pv1) returns r4:Encounter {
+    string encounterClass = pv1.pv12.toString() == "I" ? "inpatient encounter" : "ambulatory";
+    r4:Encounter encounter = {id: pv1.pv11.toString(), 'class: {display: encounterClass}, status: "in-progress"};
+    return encounter;
+};
