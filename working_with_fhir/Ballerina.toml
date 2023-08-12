@@ -2,7 +2,17 @@
 org = "healthcare_samples"
 name = "working_with_fhir"
 version = "0.1.0"
-distribution = "2201.5.0"
+distribution = "2201.7.0"
 
 [build-options]
 observabilityIncluded = true
+
+[[dependency]]
+org = "ballerinax"
+name = "health.fhir.r4"
+version = "4.0.0"
+
+[[dependency]]
+org = "ballerinax"
+name = "health.fhir.r4.international401"
+version = "1.0.0"
