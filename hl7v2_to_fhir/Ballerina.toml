@@ -2,7 +2,7 @@
 org = "healthcare_samples"
 name = "hl7v2_to_fhir"
 version = "0.1.0"
-distribution = "2201.6.0"
+distribution = "2201.7.0"
 
 [build-options]
 observabilityIncluded = true
@@ -10,9 +10,9 @@ observabilityIncluded = true
 [[dependency]]
 org = "ballerinax"
 name = "health.hl7v2.utils.v2tofhirr4"
-version = "2.0.1"
+version = "2.0.2"
 
 [[dependency]]
 org = "ballerinax"
 name = "health.hl7v2commons"
-version = "1.0.0"
+version = "1.0.1"

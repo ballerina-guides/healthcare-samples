@@ -1,8 +1,9 @@
 import ballerina/io;
-import ballerinax/health.hl7v2.utils.v2tofhirr4;
+import ballerinax/health.fhir.r4;
+import ballerinax/health.fhir.r4.international401;
 import ballerinax/health.hl7v2 as hl7;
+import ballerinax/health.hl7v2.utils.v2tofhirr4;
 import ballerinax/health.hl7v23;
-import ballerinax/health.fhir.r4 as r4;
 import ballerinax/health.hl7v2commons as hl7types;
 
 final string msg =
@@ -56,8 +57,8 @@ public function main() returns error? {
 #
 # + pv1 - PV1 segment
 # + return - Encounter FHIR resource
-function pv1ToEncounter(hl7types:Pv1 pv1) returns r4:Encounter {
+isolated function pv1ToEncounter(hl7types:Pv1 pv1) returns international401:Encounter {
     string encounterClass = pv1.pv12.toString() == "I" ? "inpatient encounter" : "ambulatory";
-    r4:Encounter encounter = {id: pv1.pv11.toString(), 'class: {display: encounterClass}, status: "in-progress"};
+    international401:Encounter encounter = {id: pv1.pv11.toString(), 'class: {display: encounterClass}, status: "in-progress"};
     return encounter;
 };
