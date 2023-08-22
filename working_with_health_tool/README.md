@@ -6,8 +6,7 @@ This guide shows how to generate a package and use the generated package in a RE
 
 ### Generate Ballerina Package using Health Tool
 
-- Navigate to `ig_carinbb` directory
-- Run `bal health fhir -m package -o gen --org-name healthcare_samples --package-name carinbb_package definitions/`
+- Run `bal health fhir -m package -o ig_carinbb/gen --org-name healthcare_samples --package-name carinbb_package ig_carinbb/definitions/`
     > Note: `definitions` directory contains the JSON definitions of the CarinBB IG
 - This will generate a Ballerina package in `ig_carinbb/gen` directory
 

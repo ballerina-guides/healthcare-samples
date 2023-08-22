@@ -1,8 +1,7 @@
 import ballerina/http;
+import ballerina/log;
 import ballerinax/health.fhir.r4;
 import healthcare_samples/carinbb_package as carinbb;
-
-listener http:Listener httpListener = new (9090);
 
 public type Patient record {
     string id;
@@ -12,9 +11,14 @@ public type Patient record {
     string gender?;
 };
 
-service / on httpListener {
+service / on new http:Listener(9090) {
 
-    isolated resource function get [string fhirType]/[string id]() returns @http:Payload {mediaType: ["application/fhir+json", "application/fhir+xml"]}r4:FHIRWireFormat|error {
+    isolated resource function get [string fhirType]/[string id]() returns @http:Payload {
+        mediaType: [
+            "application/fhir+json",
+            "application/fhir+xml"
+        ]
+    } r4:FHIRWireFormat|error {
 
         // Mock Patient payload from legacy healthcare system
         Patient patient = {
@@ -44,6 +48,7 @@ service / on httpListener {
             ]
         };
 
+        log:printInfo("Responded Patient Resource: " + c4bbPatient.toString());
         return c4bbPatient.toJson();
     }
 }
