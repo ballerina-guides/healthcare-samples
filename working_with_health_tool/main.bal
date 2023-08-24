@@ -15,8 +15,7 @@ service / on new http:Listener(9090) {
 
     isolated resource function get [string fhirType]/[string id]() returns @http:Payload {
         mediaType: [
-            "application/fhir+json",
-            "application/fhir+xml"
+            "application/fhir+json"
         ]
     } r4:FHIRWireFormat|error {
 
