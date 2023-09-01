@@ -27,3 +27,5 @@ This guide shows how to generate a package and use the generated package in a RE
 
 - Navigate to project root of `working_with_health_tool`(where the Ballerina.toml file exist.)
 - Run `bal run`
+
+> For more information, go to [Health tool (FHIR/HL7)](https://ballerina.io/learn/health-tool/).
