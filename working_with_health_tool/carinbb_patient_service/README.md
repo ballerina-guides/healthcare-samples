@@ -14,9 +14,9 @@ This guide shows how to generate a package and use that generated package in a R
 
 1. Clone the repository to your local machine.
 
-2. Navigate to the `working_with_health_tool/carinbb_service_api` directory.
+2. Navigate to the `working_with_health_tool` directory.
 
-  > `cd working_with_health_tool/carinbb_service_api`
+  > `cd working_with_health_tool`
 
 3. Generate the package.
 
@@ -34,7 +34,7 @@ This guide shows how to generate a package and use that generated package in a R
 
 ## Run the project
 
-1. Navigate to the project root of the `working_with_health_tool/carinbb_service_api` directory (i.e., where the `Ballerina.toml`` file exists.)
+1. Navigate to the project root of the `working_with_health_tool/carinbb_patient_service` directory (i.e., where the `Ballerina.toml`` file exists.)
 
 2. Run `bal run`.
 
