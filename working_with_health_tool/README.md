@@ -9,16 +9,15 @@ This guide shows how to generate a package and use that generated package in a R
 - Ballerina [Swan Lake Update 7](https://ballerina.io/downloads/) or higher
 - Ballerina Health Tool installed by executing the command below.
   > `bal tool pull health`
+- Clone this repository to your local machine.
 
 ## Generate the Ballerina package using the Health Tool
 
-1. Clone the repository to your local machine.
-
-2. Navigate to the `working_with_health_tool` directory.
+1. Navigate to the cloned `working_with_health_tool` directory.
 
   > `cd working_with_health_tool`
 
-3. Generate the package.
+2. Generate the package.
 
   > `bal health fhir -m package -o ig_carinbb/gen --org-name healthcare_samples --package-name carinbb_package ig_carinbb/definitions/`
 
@@ -28,13 +27,13 @@ This guide shows how to generate a package and use that generated package in a R
 
 ## Build and push the package
 
-1. Navigate to the `ig_carinbb/gen/carinbb_package` directory.
+1. Navigate to the `ig_carinbb/gen/carinbb_package` directory. 
 
 2. Run `bal pack` and then `bal push --repository=local`.
 
 ## Run the project
 
-1. Navigate to the project root of the `working_with_health_tool/carinbb_patient_service` directory (i.e., where the `Ballerina.toml`` file exists.)
+1. Navigate to the `carinbb_patient_service` directory (i.e., where the `Ballerina.toml` file exists).
 
 2. Run `bal run`.
 
