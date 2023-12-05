@@ -38,14 +38,14 @@ service / on new http:Listener(9090) {
                 }
             ]
     ,
-            gender: <carinbb:PatientGender>patient.gender,
+            gender: <carinbb:C4BBPatientGender>patient.gender,
             name: [
                 {
                     family: patient.lastName,
                     given: [patient.firstName, patient.middleName]
                 }
             ]
-        };
+        ,meta: {lastUpdated: "", profile: []}};
 
         log:printInfo("Responded Patient Resource: " + c4bbPatient.toString());
         return c4bbPatient.toJson();

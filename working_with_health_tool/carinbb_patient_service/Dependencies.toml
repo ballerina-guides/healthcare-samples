@@ -337,7 +337,7 @@ modules = [
 [[package]]
 org = "healthcare_samples"
 name = "carinbb_ballerina"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
 	{org = "ballerinai", name = "observe"},
@@ -351,7 +351,7 @@ modules = [
 [[package]]
 org = "healthcare_samples"
 name = "carinbb_package"
-version = "0.0.1"
+version = "1.0.0"
 dependencies = [
 	{org = "ballerina", name = "constraint"},
 	{org = "ballerina", name = "log"},
