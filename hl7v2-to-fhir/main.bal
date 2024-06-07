@@ -34,9 +34,9 @@ public function main() returns error? {
                 hl7msg.pid.pid9);
         if patientName is r4:HumanName[] {
             io:println("HL7v23 PID Patient Name: ", patientName[0].toString());
+            io:println("------------------------------------------------------------------");
         }
     }
-    io:println("------------------------------------------------------------------");
 
     // You can also bind custom mapping function implementations by overriding 
     // the default mapping functions. Following are the supported mapping functions. These functions are
