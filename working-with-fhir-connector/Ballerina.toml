@@ -2,7 +2,7 @@
 org = "healthcare_samples"
 name = "working_with_fhir_connector"
 version = "0.1.0"
-distribution = "2201.7.0"
+distribution = "2201.9.0"
 
 [build-options]
 observabilityIncluded = true
