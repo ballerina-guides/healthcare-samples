@@ -2,9 +2,9 @@ import ballerina/io;
 import ballerinax/health.fhir.r4;
 import ballerinax/health.fhir.r4.international401;
 import ballerinax/health.hl7v2 as hl7;
-import ballerinax/health.hl7v2.utils.v2tofhirr4;
 import ballerinax/health.hl7v23;
 import ballerinax/health.hl7v2commons as hl7types;
+import ballerinax/health.hl7v2.utils.v2tofhirr4;
 
 final string msg =
 "MSH|^~\\&|ADT1|GOOD HEALTH HOSPITAL|GHH LAB, INC.|GOOD HEALTH" +
@@ -30,10 +30,12 @@ public function main() returns error? {
     if (hl7msg is hl7v23:ADT_A01) {
         // if you want to work with HL7v2 segments directly.
         // Transform HL7v2 PID to FHIR R4 Patient Name.
-        r4:HumanName[] patientName = v2tofhirr4:pidToPatientName(hl7msg.pid.pid5,
-        hl7msg.pid.pid9);
-        io:println("HL7v23 PID Patient Name: ", patientName[0].toString());
-        io:println("------------------------------------------------------------------");
+        r4:HumanName[]? patientName = v2tofhirr4:pidToPatientName(hl7msg.pid.pid5,
+                hl7msg.pid.pid9);
+        if patientName is r4:HumanName[] {
+            io:println("HL7v23 PID Patient Name: ", patientName[0].toString());
+            io:println("------------------------------------------------------------------");
+        }
     }
 
     // You can also bind custom mapping function implementations by overriding 
