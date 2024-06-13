@@ -27,16 +27,21 @@ jobs:
 
       - name: Build Ballerina Projects
         run: |
+          # Define folders to skip building
+          SKIP_FOLDERS=( "working-with-health-tool" )
+
           # Find Ballerina Project Folders
-          BALLERINA_PROJECT_FOLDERS=$(find . -name "Ballerina.toml" -printf '%p\n' | sed 's/\/Ballerina.toml$//' | sort -u | tr '\n' ' ')
+          BALLERINA_PROJECT_FOLDERS=$(find . -name "Ballerina.toml" -printf '%p\n' | sed 's/\/Ballerina.toml$//' | sed 's,^./,,' | sort -u | tr '\n' ' ')
 
           # Convert BALLERINA_PROJECT_FOLDERS to an array
           read -r -a BALLERINA_PROJECTS <<<"${BALLERINA_PROJECT_FOLDERS}"
 
           # Build With Ballerina
           for folder in "${BALLERINA_PROJECTS[@]}"; do
-            pushd "$folder"
-            bal build
-            popd
+            if [[ ! "$folder" =~ ^(${SKIP_FOLDERS[@]//\//|}) ]]; then
+              pushd "$folder"
+              bal build
+              popd
+            fi
           done
           
