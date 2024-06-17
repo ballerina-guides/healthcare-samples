@@ -6,8 +6,3 @@ distribution = "2201.9.0"
 
 [build-options]
 observabilityIncluded = true
-
-[dependencies]
-org = "ballerinax"
-name = "health.hl7v23"
-version = "3.0.2"
