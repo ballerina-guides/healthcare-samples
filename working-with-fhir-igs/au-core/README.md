@@ -13,7 +13,8 @@ Before running this sample, make sure you have the following:
 To get started with this sample, follow these steps:
 
 1. Clone this repository to your local machine.
-2. Run the project using the following command:
+2. Navigate to working-with-fhir-igs/au-core folder. 
+3. Run the project using the following command:
 
 ```bash
 $ bal run
