@@ -1,5 +1,6 @@
 import ballerina/io;
 import ballerinax/health.fhir.r4;
+import ballerinax/health.hl7v2;
 import ballerinax/health.hl7v2.utils.v2tofhirr4;
 
 final string msg =
@@ -17,12 +18,14 @@ public function main() returns error? {
     // the mappings defined at
     // https://build.fhir.org/ig/HL7/v2-to-fhir/branches/master/datatype_maps.html.
     json v2tofhirResult = check v2tofhirr4:v2ToFhir(msg);
-    io:println("Transformed FHIR message: ", v2tofhirResult.toString());
-    io:println("------------------------------------------------------------------");
+    r4:Bundle transformedBundle = check v2tofhirResult.cloneWithType(r4:Bundle);
+
+    // Parsing HL7v2 message
+    hl7v2:Message incomingMsg = check hl7v2:parse(msg);
 
     // Casting to Danish IG resources
     //http://medcomfhir.dk/ig/core/2.4.0/
-    r4:Bundle castedBundle = <r4:Bundle>check processBundle(v2tofhirResult);
+    r4:Bundle castedBundle = <r4:Bundle>check processBundle(transformedBundle, incomingMsg);
     io:println("Danish FHIR bundle: ", castedBundle);
     io:println("------------------------------------------------------------------");
 
@@ -42,4 +45,3 @@ public function main() returns error? {
     io:println("------------------------------------------------------------------");
 
 }
-

@@ -5,3 +5,5 @@ version = "1.0.0"
 distribution = "2201.10.2"
 
 [build-options]
+optimizeDependencyCompilation = true
+

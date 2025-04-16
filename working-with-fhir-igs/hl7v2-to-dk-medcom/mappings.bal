@@ -1,315 +1,180 @@
+import ballerina/uuid;
 import ballerinax/health.fhir.r4;
 import ballerinax/health.fhir.r4.international401;
+import ballerinax/health.hl7v2 as hl7;
+import ballerinax/health.hl7v23;
+import ballerinax/health.fhir.r4.medcom240;
 
-import healthcare/medcom240;
 
-public isolated function transformPatient(international401:Patient patient) returns medcom240:MedComCorePatient {
+# Custom values can be populated using the incoing message. Result need to be merge with original resource.
+#
+# + originalMessage - incoming HL7v2 message
+# + return - Patient resource containing only the customly mapped values.
+public isolated function createCustomPatient(hl7:Message originalMessage) returns medcom240:MedComCorePatient|error {
 
-    medcom240:MedComCorePatient result = {
-        id: patient.id,
-        identifier: [],
-        gender: patient.gender,
-        extension: patient.extension,
-        modifierExtension: patient.modifierExtension,
-        link: patient.link,
+    hl7v23:ADT_A01 adtMsg = <hl7v23:ADT_A01>originalMessage;
+    hl7v23:PID pidSegment = adtMsg.pid;
+    hl7v23:PV1 pv1Segment = adtMsg.pv1;
 
-        communication: patient.communication,
+    string internalId = pidSegment.pid3[0].cx1;
+    string danishFHIRId = uuid:createType1AsString();
+    string familyName = pidSegment.pid5[0].xpn1;
+    string givenName = pidSegment.pid5[0].xpn2;
 
-        name: [],
-        language: patient.language,
-        contact: patient.contact,
-        deceasedDateTime: patient.deceasedDateTime,
-        generalPractitioner: patient.generalPractitioner,
-        telecom: patient.telecom,
-        text: patient.text,
-        address: patient.address,
-        multipleBirthBoolean: patient.multipleBirthBoolean,
-        active: patient.active,
-        photo: patient.photo,
-        birthDate: patient.birthDate,
-        contained: patient.contained,
-        deceasedBoolean: patient.deceasedBoolean,
-        managingOrganization: patient.managingOrganization,
-        meta: patient.meta,
-        multipleBirthInteger: patient.multipleBirthInteger,
-        implicitRules: patient.implicitRules,
-        maritalStatus: patient.maritalStatus
+    string referringDoctorId = pv1Segment.pv18[0].xcn1;
+
+    medcom240:MedComCorePatientIdentifierD_ecpr deprIdentifier = {
+        value: internalId
+
     };
 
-    r4:Identifier[]? originalIdentifiers = patient.identifier;
-    if originalIdentifiers is r4:Identifier[] {
-        result.identifier = originalIdentifiers;
-    }
-
-    r4:HumanName[]? originalNames = patient.name;
-    if originalNames is r4:HumanName[] {
-        result.name = originalNames;
-    }
-
-    r4:canonical[] profiles = ["URL"];
-
-    result.meta.profile = profiles;
-
-    medcom240:MedComCorePatientIdentifierCpr identifier = {
-        system: "system",
-        value: "wso2id"
+    medcom240:MedComCorePatientIdentifierCpr cprIdentifier = {
+        value: danishFHIRId
     };
 
-    result.identifier.push(identifier);
+    medcom240:MedComCorePatientNameOfficial slicedName = {
+        family: familyName,
+        given: [givenName]
+    };
 
-    return result;
+    medcom240:MedComCorePatientGeneralPractitionerReferencedSORUnit slicedPractitioner = {
+        identifier: {
+            value: referringDoctorId,
+            system: "urn:oid:1.2.208.176.1.1",
+            use: "official"
+        }
+
+    };
+    r4:canonical[] profiles = ["http://medcomfhir.dk/ig/core/StructureDefinition/medcom-core-patient"];
+
+    medcom240:MedComCorePatient customPatient = {
+
+        identifier: [cprIdentifier, deprIdentifier],
+        name: [slicedName],
+        generalPractitioner: [slicedPractitioner],
+        meta: {
+            profile: profiles
+        }
+    };
+
+    return customPatient;
 }
 
-public isolated function transformEncounter(international401:Encounter encounter) returns medcom240:MedComCoreEncounter {
+# Transformation function for patient resource. Includes custom mappings as well
+#
+# + originalResource - generic R4 resource  
+# + incomingMsg - original HL7v2 message
+# + return - completed Danish FHIR profiled resource
+public isolated function transformPatient(r4:Resource originalResource, hl7:Message incomingMsg) returns medcom240:MedComCorePatient|error {
 
-    medcom240:MedComCoreEncounter result = {
+    international401:Patient patient = check originalResource.cloneWithType(international401:Patient);
 
-        'class: encounter.'class,
-        subject: {},
-        status: encounter.status,
+    // add IG specific constrained values for typed clone.
+    patient.identifier = [];
+    patient.name = [];
 
-        serviceType: encounter.serviceType,
-        partOf: encounter.partOf,
-        extension: encounter.extension,
-        modifierExtension: encounter.modifierExtension,
-        reasonReference: encounter.reasonReference,
-        appointment: encounter.appointment,
-        language: encounter.language,
-        'type: encounter.'type,
-        participant: encounter.participant,
-        episodeOfCare: encounter.episodeOfCare,
-        id: encounter.id,
-        reasonCode: encounter.reasonCode,
-        text: encounter.text,
-        basedOn: encounter.basedOn,
-        identifier: encounter.identifier,
-        period: encounter.period,
-        classHistory: encounter.classHistory,
-        hospitalization: encounter.hospitalization,
-        length: encounter.length,
-        diagnosis: encounter.diagnosis,
-        priority: encounter.priority,
-        contained: encounter.contained,
-        statusHistory: encounter.statusHistory,
-        meta: encounter.meta,
-        serviceProvider: encounter.serviceProvider,
-        implicitRules: encounter.implicitRules,
-        location: encounter.location,
-        account: encounter.account
+    medcom240:MedComCorePatient originalPatient = check patient.cloneWithType(medcom240:MedComCorePatient);
+    medcom240:MedComCorePatient customPatient = check createCustomPatient(incomingMsg);
 
-    };
+    //Merge identifiers
+    if originalPatient.identifier.length() == 0 {
+        originalPatient.identifier = customPatient.identifier;
+    } else {
+        foreach medcom240:MedComCorePatientIdentifierD_ecpr|medcom240:MedComCorePatientIdentifierCpr identifier in customPatient.identifier {
+            originalPatient.identifier.push(identifier);
+        }
+    }
 
-    r4:canonical[] profiles = ["URL"];
+    //Merge Names
+    if originalPatient.name.length() == 0 {
+        originalPatient.name = customPatient.name;
+    } else {
+        foreach r4:HumanName|medcom240:MedComCorePatientNameOfficial name in customPatient.name {
+            originalPatient.name.push(name);
+        }
+    }
 
-    result.meta.profile = profiles;
+    //Set profile
+    originalPatient.meta.profile = customPatient.meta?.profile;
 
-    return result;
+    return originalPatient;
 }
 
-public isolated function transformDiagnosticReport(international401:DiagnosticReport diagnosticReport) returns medcom240:MedComCoreDiagnosticReport {
+# Contains generic convertion and type casting implementation for Encounter resource.
+#
+# + originalResource - generic R4 resource  
+# + incomingMsg - original HL7v2 message
+# + return - completed Danish FHIR profiled resource
+public isolated function transformEncounter(r4:Resource originalResource, hl7:Message incomingMsg) returns medcom240:MedComCoreEncounter|error {
 
-    medcom240:MedComCoreDiagnosticReport result = {
-        // Required fields
-        code: diagnosticReport.code,
-        subject: {},
-        issued: "",
-        status: diagnosticReport.status,
+    international401:Encounter typedResource = check originalResource.cloneWithType(international401:Encounter);
 
-        extension: diagnosticReport.extension,
-        modifierExtension: diagnosticReport.modifierExtension,
-        presentedForm: diagnosticReport.presentedForm,
-        language: diagnosticReport.language,
-        media: diagnosticReport.media,
-        conclusion: diagnosticReport.conclusion,
-        result: diagnosticReport.result,
-        specimen: diagnosticReport.specimen,
-        id: diagnosticReport.id,
-        text: diagnosticReport.text,
-        basedOn: diagnosticReport.basedOn,
-        identifier: diagnosticReport.identifier,
-        performer: diagnosticReport.performer,
-        effectivePeriod: diagnosticReport.effectivePeriod,
-        resultsInterpreter: diagnosticReport.resultsInterpreter,
-        conclusionCode: diagnosticReport.conclusionCode,
-        encounter: diagnosticReport.encounter,
-        contained: diagnosticReport.contained,
-        effectiveDateTime: diagnosticReport.effectiveDateTime,
-        meta: diagnosticReport.meta,
-        implicitRules: diagnosticReport.implicitRules,
-        category: diagnosticReport.category,
-        imagingStudy: diagnosticReport.imagingStudy
-    };
+    // add IG specific constrained values for typed clone.
+    typedResource.subject = {};
 
-    r4:Reference? subject = diagnosticReport.subject;
-    if subject is r4:Reference {
-        result.subject = subject;
-    }
+    medcom240:MedComCoreEncounter castedResource = check typedResource.cloneWithType(medcom240:MedComCoreEncounter);
+    r4:canonical[] profiles = ["http://medcomfhir.dk/ig/core/StructureDefinition/medcom-core-encounter"];
 
-    r4:instant? originaInstant = diagnosticReport.issued;
-    if originaInstant is r4:instant {
-        result.issued = originaInstant;
-    }
+    castedResource.meta.profile = profiles;
 
-    r4:canonical[] profiles = ["URL"];
-
-    result.meta.profile = profiles;
-
-    return result;
+    return castedResource;
 }
 
-public isolated function transformObservation(international401:Observation observation) returns medcom240:MedComCoreObservation {
+public isolated function transformDiagnosticReport(r4:Resource originalResource, hl7:Message incomingMsg) returns medcom240:MedComCoreDiagnosticReport|error {
 
-    medcom240:MedComCoreObservation result = {
-        // Required fields
-        code: observation.code,
-        subject: {},
-        status: <medcom240:MedComCoreObservationStatus>observation.status,
+    international401:DiagnosticReport typedResource = check originalResource.cloneWithType(international401:DiagnosticReport);
 
-        valueBoolean: observation.valueBoolean,
-        dataAbsentReason: observation.dataAbsentReason,
-        note: observation.note,
-        partOf: observation.partOf,
-        extension: observation.extension,
-        valueTime: observation.valueTime,
-        valueRange: observation.valueRange,
-        modifierExtension: observation.modifierExtension,
-        focus: observation.focus,
-        language: observation.language,
-        valueCodeableConcept: observation.valueCodeableConcept,
-        valueRatio: observation.valueRatio,
-        specimen: observation.specimen,
-        derivedFrom: observation.derivedFrom,
-        valueDateTime: observation.valueDateTime,
-        id: observation.id,
-        text: observation.text,
-        issued: observation.issued,
-        valueInteger: observation.valueInteger,
-        basedOn: observation.basedOn,
-        valueQuantity: observation.valueQuantity,
-        identifier: observation.identifier,
-        performer: observation.performer,
-        effectivePeriod: observation.effectivePeriod,
-        effectiveTiming: observation.effectiveTiming,
-        method: observation.method,
-        hasMember: observation.hasMember,
-        encounter: observation.encounter,
-        bodySite: observation.bodySite,
-        component: [],
-        contained: observation.contained,
-        referenceRange: observation.referenceRange,
-        valueString: observation.valueString,
-        effectiveDateTime: observation.effectiveDateTime,
-        interpretation: observation.interpretation,
-        meta: observation.meta,
-        valueSampledData: observation.valueSampledData,
-        valuePeriod: observation.valuePeriod,
-        implicitRules: observation.implicitRules,
-        category: observation.category,
-        device: observation.device,
-        effectiveInstant: observation.effectiveInstant
-    };
+    // add IG specific constrained values for typed clone.
+    typedResource.subject = {};
+    typedResource.status = "registered";
+    typedResource.issued = "2015-02-07T13:28:17.239+02:00";
 
-    // Handle subject which is required but might be null in the source
-    r4:Reference? subject = observation.subject;
-    if subject is r4:Reference {
-        result.subject = subject;
-    }
+    medcom240:MedComCoreDiagnosticReport castedResource = check typedResource.cloneWithType(medcom240:MedComCoreDiagnosticReport);
+    r4:canonical[] profiles = ["http://medcomfhir.dk/ig/core/StructureDefinition/medcom-core-diagnosticreport"];
 
-    // Set the profile
-    r4:canonical[] profiles = ["URL"];
+    castedResource.meta.profile = profiles;
 
-    // Check if meta exists, if not create it
-    if result.meta is () {
-        result.meta = {};
-    }
-
-    // Now safely set the profile
-    result.meta.profile = profiles;
-
-    return result;
+    return castedResource;
 }
 
-public isolated function transformOrganization(international401:Organization organization) returns medcom240:MedComCoreOrganization {
+public isolated function transformObservation(r4:Resource originalResource, hl7:Message incomingMsg) returns medcom240:MedComCoreObservation|error {
 
-    medcom240:MedComCoreOrganization result = {
-        // Required field
-        identifier: [],
+    international401:Observation typedResource = check originalResource.cloneWithType(international401:Observation);
 
-        // Remaining elements
-        partOf: organization.partOf,
-        extension: organization.extension,
-        address: organization.address,
-        modifierExtension: organization.modifierExtension,
-        active: organization.active,
-        language: organization.language,
-        'type: organization.'type,
-        endpoint: organization.endpoint,
-        contained: organization.contained,
-        meta: organization.meta,
-        contact: organization.contact,
-        name: organization.name,
-        alias: organization.alias,
-        implicitRules: organization.implicitRules,
-        telecom: organization.telecom,
-        id: organization.id,
-        text: organization.text
-    };
+    // add IG specific constrained values for typed clone.
+    typedResource.subject = {};
 
-    // Handle identifier which is required
-    r4:Identifier[]? identifiers = organization.identifier;
-    if identifiers is r4:Identifier[] {
-        result.identifier = identifiers;
-    }
+    medcom240:MedComCoreObservation castedResource = check typedResource.cloneWithType(medcom240:MedComCoreObservation);
+    r4:canonical[] profiles = ["http://medcomfhir.dk/ig/core/StructureDefinition/medcom-core-diagnosticreport"];
 
-    // Set the profile
-    r4:canonical[] profiles = ["URL"];
+    castedResource.meta.profile = profiles;
 
-    // Check if meta exists, if not create it
-    if result.meta is () {
-        result.meta = {};
-    }
-
-    // Now safely set the profile
-    result.meta.profile = profiles;
-
-    return result;
+    return castedResource;
 }
 
-public isolated function transformPractitioner(international401:Practitioner practitioner) returns medcom240:MedComCorePractitioner {
+public isolated function transformOrganization(r4:Resource originalResource, hl7:Message incomingMsg) returns medcom240:MedComCoreOrganization|error {
 
-    medcom240:MedComCorePractitioner result = {
+    international401:Organization typedResource = check originalResource.cloneWithType(international401:Organization);
 
-        // Map all fields from source
-        identifier: practitioner.identifier,
-        extension: practitioner.extension,
-        address: practitioner.address,
-        gender: practitioner.gender,
-        modifierExtension: practitioner.modifierExtension,
-        active: practitioner.active,
-        photo: practitioner.photo,
-        language: practitioner.language,
-        birthDate: practitioner.birthDate,
-        qualification: practitioner.qualification,
-        contained: practitioner.contained,
-        meta: practitioner.meta,
-        name: practitioner.name,
-        implicitRules: practitioner.implicitRules,
-        telecom: practitioner.telecom,
-        id: practitioner.id,
-        text: practitioner.text,
-        communication: practitioner.communication
-    };
+    // add IG specific constrained values for typed clone.
+    typedResource.identifier = [];
 
-    // Set the profile
-    r4:canonical[] profiles = ["URL"];
+    medcom240:MedComCoreOrganization castedResource = check typedResource.cloneWithType(medcom240:MedComCoreOrganization);
+    r4:canonical[] profiles = ["http://medcomfhir.dk/ig/core/StructureDefinition/medcom-core-organization"];
 
-    // Check if meta exists, if not create it
-    if result.meta is () {
-        result.meta = {};
-    }
+    castedResource.meta.profile = profiles;
 
-    // Now safely set the profile
-    result.meta.profile = profiles;
+    return castedResource;
+}
 
-    return result;
+public isolated function transformPractitioner(r4:Resource originalResource, hl7:Message incomingMsg) returns medcom240:MedComCorePractitioner|error {
+
+    international401:Practitioner typedResource = check originalResource.cloneWithType(international401:Practitioner);
+
+    medcom240:MedComCorePractitioner castedResource = check typedResource.cloneWithType(medcom240:MedComCorePractitioner);
+    r4:canonical[] profiles = ["http://medcomfhir.dk/ig/core/StructureDefinition/medcom-core-practitioner"];
+
+    castedResource.meta.profile = profiles;
+
+    return castedResource;
 }

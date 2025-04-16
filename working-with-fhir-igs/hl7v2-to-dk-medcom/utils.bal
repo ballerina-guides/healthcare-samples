@@ -1,10 +1,7 @@
-import ballerina/log;
 import ballerinax/health.fhir.r4;
-import ballerinax/health.fhir.r4.international401;
-import ballerinax/health.fhir.r4.parser as r4parser;
+import ballerinax/health.hl7v2 as hl7;
 import ballerinax/health.hl7v2commons as hl7types;
-
-import healthcare/medcom240;
+import ballerinax/health.fhir.r4.medcom240;
 
 # Custom v2 to fhir mapping implementation. pv1 segments will refer this when transforming
 #
@@ -27,51 +24,39 @@ public isolated function pv1ToMedcomEncounter(hl7types:Pv1 pv1) returns medcom24
     return encounter;
 };
 
-public isolated function processBundle(json fhirBundle) returns r4:Bundle|error? {
+# Update resources in the bundle that are defined in Danish IG.
+#
+# + bundle - Bundle resource from v2toFHIR transformation  
+# + incomingMsg - incoming HL7v2 message
+# + return - Updated bundle resource
+public isolated function processBundle(r4:Bundle bundle, hl7:Message incomingMsg) returns r4:Bundle|error? {
 
-    r4:Bundle bundle = <r4:Bundle>check r4parser:parse(fhirBundle);
     r4:BundleEntry[] updatedEntries = [];
-    if bundle is r4:Bundle {
-        r4:BundleEntry[] entries = <r4:BundleEntry[]>bundle.entry;
-        foreach var entry in entries {
-            map<anydata> fhirResource = <map<anydata>>entry?.'resource;
-            if fhirResource["resourceType"].toString() == "Patient" {
-                international401:Patient patientResource = <international401:Patient>check r4parser:parse(fhirResource.toJson(), international401:Patient, ());
+    r4:BundleEntry[] entries = <r4:BundleEntry[]>bundle.entry;
+    foreach var entry in entries {
+        r4:Resource unionResult = check entry?.'resource.cloneWithType(r4:Resource);
+        string resourceType = unionResult.resourceType;
 
-                log:printInfo(string `Updated Patient resource: ${patientResource.toJsonString()}`);
-                updatedEntries.push({'resource: transformPatient(patientResource)});
-            } else if fhirResource["resourceType"].toString() == "Encounter" {
-                international401:Encounter encounterResource = <international401:Encounter>check r4parser:parse(fhirResource.toJson(), international401:Encounter);
-
-                log:printDebug(string `Encounter resource: ${encounterResource.toJsonString()}`);
-
-                updatedEntries.push({'resource: transformEncounter(encounterResource)});
-            } else if fhirResource["resourceType"].toString() == "DiagnosticReport" {
-                international401:DiagnosticReport diagnosticReportResource = <international401:DiagnosticReport>check r4parser:parse(fhirResource.toJson());
-
-                log:printDebug(string `DiagnosticReport resource: ${diagnosticReportResource.toJsonString()}`);
-
-                updatedEntries.push({'resource: transformDiagnosticReport(diagnosticReportResource)});
-
-            } else if fhirResource["resourceType"].toString() == "Observation" {
-                international401:Observation observationResource = <international401:Observation>check r4parser:parse(fhirResource.toJson());
-
-                log:printDebug(string `Observation resource: ${observationResource.toJsonString()}`);
-
-                updatedEntries.push({'resource: transformObservation(observationResource)});
-            } else if fhirResource["resourceType"].toString() == "Organization" {
-                international401:Organization organizationResource = <international401:Organization>check r4parser:parse(fhirResource.toJson());
-
-                log:printDebug(string `Organization resource: ${organizationResource.toJsonString()}`);
-
-                updatedEntries.push({'resource: transformOrganization(organizationResource)});
-            } else if fhirResource["resourceType"].toString() == "Practitioner" {
-                international401:Practitioner practitionerResource = <international401:Practitioner>check r4parser:parse(fhirResource.toJson());
-
-                log:printDebug(string `Practitioner resource: ${practitionerResource.toJsonString()}`);
-
-                updatedEntries.push({'resource: transformPractitioner(practitionerResource)});
-            } else {
+        match resourceType {
+            "Patient" => {
+                updatedEntries.push({'resource: check transformPatient(unionResult, incomingMsg)});
+            }
+            "Encounter" => {
+                updatedEntries.push({'resource: check transformEncounter(unionResult, incomingMsg)});
+            }
+            "DiagnosticReport" => {
+                updatedEntries.push({'resource: check transformDiagnosticReport(unionResult, incomingMsg)});
+            }
+            "Observation" => {
+                updatedEntries.push({'resource: check transformObservation(unionResult, incomingMsg)});
+            }
+            "Organization" => {
+                updatedEntries.push({'resource: check transformOrganization(unionResult, incomingMsg)});
+            }
+            "Practitioner" => {
+                updatedEntries.push({'resource: check transformPractitioner(unionResult, incomingMsg)});
+            }
+            _ => {
                 updatedEntries.push(entry);
             }
         }
@@ -81,4 +66,3 @@ public isolated function processBundle(json fhirBundle) returns r4:Bundle|error?
     return bundle;
 
 }
-
