@@ -25,7 +25,7 @@ public function main() returns error? {
 
     // Casting to Danish IG resources
     //http://medcomfhir.dk/ig/core/2.4.0/
-    r4:Bundle castedBundle = <r4:Bundle>check processBundle(transformedBundle, incomingMsg);
+    r4:Bundle castedBundle = <r4:Bundle>check postProcessBundle(transformedBundle, incomingMsg);
     io:println("Danish FHIR bundle: ", castedBundle);
     io:println("------------------------------------------------------------------");
 

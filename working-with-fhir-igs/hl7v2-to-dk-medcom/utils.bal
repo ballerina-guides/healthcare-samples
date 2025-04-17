@@ -1,7 +1,7 @@
 import ballerinax/health.fhir.r4;
+import ballerinax/health.fhir.r4.medcom240;
 import ballerinax/health.hl7v2 as hl7;
 import ballerinax/health.hl7v2commons as hl7types;
-import ballerinax/health.fhir.r4.medcom240;
 
 # Custom v2 to fhir mapping implementation. pv1 segments will refer this when transforming
 #

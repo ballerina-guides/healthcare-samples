@@ -1,10 +1,20 @@
 import ballerina/uuid;
 import ballerinax/health.fhir.r4;
 import ballerinax/health.fhir.r4.international401;
+import ballerinax/health.fhir.r4.medcom240;
 import ballerinax/health.hl7v2 as hl7;
 import ballerinax/health.hl7v23;
-import ballerinax/health.fhir.r4.medcom240;
 
+function init() {
+
+    // Register custom transformation functions for the resources
+    addCustomTransformationFunction("Patient", transformPatient);
+    // addCustomTransformationFunction("Encounter", transformEncounter);
+    // addCustomTransformationFunction("DiagnosticReport", transformDiagnosticReport);
+    // addCustomTransformationFunction("Observation", transformObservation);
+    // addCustomTransformationFunction("Organization", transformOrganization);
+    // addCustomTransformationFunction("Practitioner", transformPractitioner);
+}
 
 # Custom values can be populated using the incoing message. Result need to be merge with original resource.
 #
@@ -97,7 +107,7 @@ public isolated function transformPatient(r4:Resource originalResource, hl7:Mess
     //Set profile
     originalPatient.meta.profile = customPatient.meta?.profile;
 
-    return originalPatient;
+    return customPatient;
 }
 
 # Contains generic convertion and type casting implementation for Encounter resource.
@@ -168,6 +178,18 @@ public isolated function transformOrganization(r4:Resource originalResource, hl7
 }
 
 public isolated function transformPractitioner(r4:Resource originalResource, hl7:Message incomingMsg) returns medcom240:MedComCorePractitioner|error {
+
+    international401:Practitioner typedResource = check originalResource.cloneWithType(international401:Practitioner);
+
+    medcom240:MedComCorePractitioner castedResource = check typedResource.cloneWithType(medcom240:MedComCorePractitioner);
+    r4:canonical[] profiles = ["http://medcomfhir.dk/ig/core/StructureDefinition/medcom-core-practitioner"];
+
+    castedResource.meta.profile = profiles;
+
+    return castedResource;
+}
+
+public isolated function customTransformPractitioner(r4:Resource originalResource, hl7:Message incomingMsg) returns medcom240:MedComCorePractitioner|error {
 
     international401:Practitioner typedResource = check originalResource.cloneWithType(international401:Practitioner);
 
