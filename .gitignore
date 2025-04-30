@@ -29,3 +29,5 @@ hs_err_pid*
 
 # IDE specific files
 .idea/
+.vscode/
+*Config.toml
