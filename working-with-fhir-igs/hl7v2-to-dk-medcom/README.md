@@ -7,18 +7,19 @@ This project demonstrates how to use Ballerina's HL7v2 to FHIR conversion utilit
 Healthcare interoperability in Denmark requires conformance to the MedCom FHIR profiles. This utility simplifies the process of converting legacy HL7v2 messages into MedCom-compliant FHIR resources, enabling seamless integration between legacy systems and modern FHIR-based healthcare platforms.
 
 The process flow for this sample is illustrated in the following diagram.
-![alt text](image-1.png)
+![flow diagram](image.png)
 
 ## Features
 
 - Convert HL7v2 ADT messages to MedCom FHIR resources
-- Support for MedCom Implementation Guide v2.4.0 profiles
+- Support for [MedCom Implementation Guide v2.4.0 profiles](https://central.ballerina.io/ballerinax/health.fhir.r4.medcom240/1.0.1).
 - Validation against Danish healthcare requirements
 - Comprehensive error handling and logging
 
 ## Prerequisites
 
 - [Ballerina](https://ballerina.io/downloads/) 2201.12.3 (Swan Lake) or newer
+- Visual Studio Code with the [Ballerina Integrator extension](https://bi.docs.wso2.com/) configured (optional - enables low-code integration visualization).
 - Basic knowledge of HL7v2 and FHIR standards
 - Knowledge of Danish healthcare standards and MedCom profiles
 
@@ -32,16 +33,24 @@ The transformation runs as an HTTP service. You can invoke the relevant endpoint
    git clone https://github.com/ballerina-guides/healthcare-samples.git
    cd working-with-fhir-igs/hl7v2-to-dk-medcom
    ```
-2. Install dependencies:
-   ```bash
-   bal build
-   ```
-3. Start the server
-   ```bash
-   bal run
-   ```
+2. Open `hl7v2-to-dk-medcom` project with Ballerina Integrator(BI).
+![BI home](image-2.png)
+3. Open terminal and exectute the following command.
+```bash
+    bal run
+```
 
-### V2toFHIR Transformation with Danish profiles
+```bash
+    Compiling source
+        healthcare_samples/hl7v2_to_medcom_fhir:1.0.0
+
+    Running executable
+
+    time=2025-05-02T16:33:23.519+05:30 level=INFO module=healthcare_samples/hl7v2_to_medcom_fhir message="HL7v2 to Danish Transformation Service Started.."
+```
+4. Try and verify the result
+
+#### Sample Request and Response
 ```bash
 curl --location 'http://localhost:9090/hl7/transform' \
 --header 'Content-Type: text/plain' \
