@@ -28,6 +28,19 @@ The transformation runs as an HTTP service. You can invoke the relevant endpoint
 
 ## Try Out
 
+### Setting up the Ballerina Development Environment
+
+ You can set up the Ballerina development environment directly through the WSO2 Ballerina Integrator extension in Visual Studio Code.
+
+- Download and install [Visual Studio Code](https://code.visualstudio.com/download).
+- Install the [WSO2 Ballerina Integrator extension](https://bi.docs.wso2.com/install-and-setup/install-ballerina-integrator/#step-2-install-the-wso2-ballerina-integrator-extension)
+- If you're using Ballerina for the first time, the extension will prompt you to install the Ballerina distribution.
+![alt text](image-1.png)
+- The setup wizard will install and configure the Ballerina distribution required for Ballerina Integrator.
+- Once the setup is complete, click Restart VS Code to finalize the installation.
+
+### Run the Sample Implementation
+
 1. Clone this repository:
    ```bash
    git clone https://github.com/ballerina-guides/healthcare-samples.git
