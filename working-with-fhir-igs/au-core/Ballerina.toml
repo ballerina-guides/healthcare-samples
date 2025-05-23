@@ -2,7 +2,7 @@
 org = "healthcare_samples"
 name = "au_core"
 version = "0.1.0"
-distribution = "2201.8.5"
+distribution = "2201.12.3"
 
 [build-options]
 observabilityIncluded = true

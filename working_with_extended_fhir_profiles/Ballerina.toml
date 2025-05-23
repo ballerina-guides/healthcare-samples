@@ -2,4 +2,4 @@
 org = "healthcare_samples"
 name = "working_with_extended_fhir_profiles"
 version = "0.1.0"
-distribution = "2201.10.2"
+distribution = "2201.12.3"
