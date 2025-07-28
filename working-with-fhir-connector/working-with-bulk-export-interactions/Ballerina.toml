@@ -1,6 +1,6 @@
 [package]
-org = "healthcare_samples"
-name = "working_with_fhir_connector"
+org = "isurangasandun"
+name = "working_with_bulk_export_interactions"
 version = "0.1.0"
 distribution = "2201.12.3"
 
