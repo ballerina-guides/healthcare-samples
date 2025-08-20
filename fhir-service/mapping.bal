@@ -1,0 +1,60 @@
+import fhir_service.db;
+
+import ballerinax/health.fhir.r4.uscore501;
+
+// #############################################################################################################################################
+// #                                               Mapper methods                                                                              #
+// #############################################################################################################################################
+
+public isolated function mapDbDataToFHIR(db:PatientDataOptionalized patient) returns uscore501:USCorePatientProfile => {
+    identifier: [],
+    gender: <uscore501:USCorePatientProfileGender>(patient?.gender?:"unkown"),
+    name: [{
+        given: mapNameToGiven(patient?.name)
+    }],
+    birthDate: patient?.birthDate
+};
+
+public isolated function mapFhirToDbData(uscore501:USCorePatientProfile patient) returns db:PatientDataInsert => {
+    gender: patient.gender,
+    name: mapGivenToName(patient.name[0].given),
+    id: generatePatientId(),
+    birthDate: patient.birthDate
+};
+
+
+// #############################################################################################################################################
+// #                                               Util methods                                                                                #
+// #############################################################################################################################################
+isolated function mapGivenToName(string[]? given) returns string {
+    if given is string[] {
+        return given[0];
+    }
+    return "";
+}
+
+isolated function mapNameToGiven(string? name) returns string[] {
+    if name is string {
+        return [name];
+    }
+    return [];
+}
+
+isolated int currentId = 4;
+
+isolated function generatePatientId() returns string {
+    lock {
+        string numberPart = currentId.toString();
+        int paddingLength = 3 - numberPart.length();
+
+        if paddingLength > 0 {
+            foreach int i in 1 ... paddingLength {
+                numberPart = string `0${numberPart}`;
+            }
+        }
+
+        numberPart = "P" + numberPart;
+        currentId += 1;
+        return numberPart;
+    }
+}
