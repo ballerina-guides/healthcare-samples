@@ -1,0 +1,11 @@
+# The base URL of the FHIR server to connect to for bulk export operations.
+baseUrl = "https://bulk-data.smarthealthit.org/fhir"
+
+# The FTP server URL used for storing exported files.
+fileServerUrl = "localhost"
+
+# The directory on the FTP server where exported files will be stored.
+fileServerDirectory = "/exports"
+
+# The expiry time (in seconds) for temporary files when using local file storage.
+tempFileExpiryTime = 3600

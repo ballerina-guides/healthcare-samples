@@ -1,6 +1,6 @@
 [package]
-org = "healthcare_samples"
-name = "working_with_fhir_connector"
+org = "isurangasandun"
+name = "generate_ips"
 version = "0.1.0"
 distribution = "2201.12.3"
 
