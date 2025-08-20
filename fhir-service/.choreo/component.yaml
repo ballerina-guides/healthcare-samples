@@ -1,0 +1,12 @@
+schemaVersion: 1.1
+endpoints:
+    - name: uscore501-fhir-api
+      displayName: uscore501 FHIR API
+      service:
+        basePath: /fhir/r4
+        port: 9090
+      type: REST
+      networkVisibilities:
+        - Project
+        - Public
+      schemaFilePath: oas/oas-definition.yaml
