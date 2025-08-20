@@ -1,7 +1,7 @@
 -- Create DB and switch
-CREATE DATABASE IF NOT EXISTS patient_data3
+CREATE DATABASE IF NOT EXISTS patient_data
   CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE patient_data3;
+USE patient_data;
 
 -- Drop existing tables if any
 DROP TABLE IF EXISTS `EncounterData`;

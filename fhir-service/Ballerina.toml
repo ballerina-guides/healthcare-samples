@@ -6,3 +6,9 @@ distribution = "2201.12.3"
 authors = ["Ballerina"]
 keywords = ["Healthcare", "FHIR", "r4"]
 template = true
+
+[[platform.java21.dependency]]
+groupId = "io.ballerina.stdlib"
+artifactId = "persist.sql-native"
+version = "1.6.0"
+
