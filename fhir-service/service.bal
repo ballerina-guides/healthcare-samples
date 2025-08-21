@@ -24,21 +24,39 @@ import ballerinax/health.fhir.r4;
 import ballerinax/health.fhirr4;
 import ballerinax/health.fhir.r4.uscore501;
 
+configurable string SERVER_BASE_URL = ?;
+
 # Generic types to wrap all implemented profiles for each resource.
 # Add required profile types here.
 public type Patient uscore501:USCorePatientProfile;
+
 public type Encounter uscore501:USCoreEncounterProfile;
+
+listener http:Listener httpListener = http:getDefaultListener();
+
+configurable r4:CapabilityStatementConfig config = ?;
 
 # initialize source system endpoints here
 
+service http:Service /fhir/r4/metadata on httpListener {
 
-// // # Patient API                                                                                                          #
-// 
+    # The capability statement is a key part of the overall conformance framework in FHIR. It is used as a statement of the
+    # features of actual software, or of a set of rules for an application to provide. This statement connects to all the
+    # detailed statements of functionality, such as StructureDefinitions and ValueSets. This composite statement of application
+    # capability may be used for system compatibility testing, code generation, or as the basis for a conformance assessment.
+    # For further information https://hl7.org/fhir/capabilitystatement.html
+    # + return - capability statement as a json
+    isolated resource function get .() returns r4:CapabilityStatement|error {
+        return check r4:generateFHIRCapabilityStatement(config);
+    }
+}
+
+# Patient API                                                                                                          #
 service /fhir/r4/Patient on new fhirr4:Listener(config = patientApiConfig) {
 
     // Read the current state of single resource based on its id.
     isolated resource function get [string id](r4:FHIRContext fhirContext) returns Patient|r4:OperationOutcome|r4:FHIRError {
-        return r4:createFHIRError("Not implemented", r4:ERROR, r4:INFORMATIONAL, httpStatusCode = http:STATUS_NOT_IMPLEMENTED);
+        return getPatient(id);
     }
 
     // Read the state of a specific version of a resource based on its id.
@@ -52,8 +70,12 @@ service /fhir/r4/Patient on new fhirr4:Listener(config = patientApiConfig) {
     }
 
     // Create a new resource.
-    isolated resource function post .(r4:FHIRContext fhirContext, Patient patient) returns Patient|r4:OperationOutcome|r4:FHIRError {
-        return r4:createFHIRError("Not implemented", r4:ERROR, r4:INFORMATIONAL, httpStatusCode = http:STATUS_NOT_IMPLEMENTED);
+    isolated resource function post .(r4:FHIRContext fhirContext, Patient patient) returns r4:FHIRError|http:Response {
+        string[] listResult = check createPatient(patient);
+        http:Response response = new;
+        response.statusCode = http:STATUS_CREATED;
+        response.addHeader(http:LOCATION, string `${SERVER_BASE_URL}/Patient/${listResult[0]}`);
+        return response;
     }
 
     // Update the current state of a resource completely.
@@ -82,9 +104,7 @@ service /fhir/r4/Patient on new fhirr4:Listener(config = patientApiConfig) {
     }
 }
 
-
-// // # Encounter API                                                                                                          #
-// 
+# Encounter API                                                                                                          #
 service /fhir/r4/Encounter on new fhirr4:Listener(config = encounterApiConfig) {
 
     // Read the current state of single resource based on its id.

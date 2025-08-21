@@ -1,8 +1,18 @@
+SERVER_BASE_URL = "http://localhost:9090"
+
 [fhir_service.db]
 host = "localhost"
 port = 3306
 user = "root"
-password = ""
-database = ""
+password = "2@Django&"
+database = "patient_data"
 
-
+[config]
+status = "active"
+kind = "instance"
+implementationDescription = "FHIR server"
+fhirVersion = "4.0.1"
+format = ["json"]
+title = "WSO2 FHIR Server"
+publisher = "WSO2"
+description = "Demo implementation"
