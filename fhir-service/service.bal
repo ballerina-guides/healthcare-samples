@@ -22,19 +22,17 @@
 import ballerina/http;
 import ballerinax/health.fhir.r4;
 import ballerinax/health.fhirr4;
-import ballerinax/health.fhir.r4.uscore501;
+import ballerinax/health.fhir.r4.uscore700;
 
 configurable string SERVER_BASE_URL = ?;
 
 # Generic types to wrap all implemented profiles for each resource.
 # Add required profile types here.
-public type Patient uscore501:USCorePatientProfile;
+public type Patient uscore700:USCorePatientProfile;
 
-public type Encounter uscore501:USCoreEncounterProfile;
+public type Encounter uscore700:USCoreEncounterProfile;
 
 listener http:Listener httpListener = http:getDefaultListener();
-
-configurable r4:CapabilityStatementConfig config = ?;
 
 # initialize source system endpoints here
 
@@ -47,7 +45,7 @@ service http:Service /fhir/r4/metadata on httpListener {
     # For further information https://hl7.org/fhir/capabilitystatement.html
     # + return - capability statement as a json
     isolated resource function get .() returns r4:CapabilityStatement|error {
-        return check r4:generateFHIRCapabilityStatement(config);
+        return check r4:generateFHIRCapabilityStatement();
     }
 }
 

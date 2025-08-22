@@ -21,84 +21,83 @@
 
 import ballerinax/health.fhir.r4;
 
-final r4:ResourceAPIConfig  encounterApiConfig = {
+final r4:ResourceAPIConfig encounterApiConfig = {
     resourceType: "Encounter",
     profiles: [
-            "http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter"
-        
+        "http://hl7.org/fhir/us/core/StructureDefinition/us-core-encounter"
 
     ],
     defaultProfile: (),
     searchParameters: [
         {
-        name: "class",
-        active: true,
-        information: {
-            description: "**Classification of patient encounter**  **NOTE**: This US Core SearchParameter definition extends the usage context of the[Conformance expectation extension](http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html) - multipleAnd - multipleOr - comparator - modifier - chain",
-            builtin: false,
-            documentation: "http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-class"
-        }
-    },
+            name: "class",
+            active: true,
+            information: {
+                description: "**Classification of patient encounter**  **NOTE**: This US Core SearchParameter definition extends the usage context of the[Conformance expectation extension](http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html) - multipleAnd - multipleOr - comparator - modifier - chain",
+                builtin: false,
+                documentation: "http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-class"
+            }
+        },
 
         {
-        name: "_id",
-        active: true,
-        information: {
-            description: "**Logical id of this artifact**  **NOTE**: This US Core SearchParameter definition extends the usage context of the[Conformance expectation extension](http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html) - multipleAnd - multipleOr - comparator - modifier - chain",
-            builtin: false,
-            documentation: "http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-id"
-        }
-    },
+            name: "_id",
+            active: true,
+            information: {
+                description: "**Logical id of this artifact**  **NOTE**: This US Core SearchParameter definition extends the usage context of the[Conformance expectation extension](http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html) - multipleAnd - multipleOr - comparator - modifier - chain",
+                builtin: false,
+                documentation: "http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-id"
+            }
+        },
 
         {
-        name: "patient",
-        active: true,
-        information: {
-            description: "**The patient or group present at the encounter**  **NOTE**: This US Core SearchParameter definition extends the usage context of the[Conformance expectation extension](http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html) - multipleAnd - multipleOr - comparator - modifier - chain",
-            builtin: false,
-            documentation: "http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-patient"
-        }
-    },
+            name: "patient",
+            active: true,
+            information: {
+                description: "**The patient or group present at the encounter**  **NOTE**: This US Core SearchParameter definition extends the usage context of the[Conformance expectation extension](http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html) - multipleAnd - multipleOr - comparator - modifier - chain",
+                builtin: false,
+                documentation: "http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-patient"
+            }
+        },
 
         {
-        name: "status",
-        active: true,
-        information: {
-            description: "**planned | arrived | triaged | in-progress | onleave | finished | cancelled +**  **NOTE**: This US Core SearchParameter definition extends the usage context of the[Conformance expectation extension](http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html) - multipleAnd - multipleOr - comparator - modifier - chain",
-            builtin: false,
-            documentation: "http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-status"
-        }
-    },
+            name: "status",
+            active: true,
+            information: {
+                description: "**planned | arrived | triaged | in-progress | onleave | finished | cancelled +**  **NOTE**: This US Core SearchParameter definition extends the usage context of the[Conformance expectation extension](http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html) - multipleAnd - multipleOr - comparator - modifier - chain",
+                builtin: false,
+                documentation: "http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-status"
+            }
+        },
 
         {
-        name: "date",
-        active: true,
-        information: {
-            description: "**A date within the period the Encounter lasted**  **NOTE**: This US Core SearchParameter definition extends the usage context of the[Conformance expectation extension](http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html) - multipleAnd - multipleOr - comparator - modifier - chain",
-            builtin: false,
-            documentation: "http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-date"
-        }
-    },
+            name: "date",
+            active: true,
+            information: {
+                description: "**A date within the period the Encounter lasted**  **NOTE**: This US Core SearchParameter definition extends the usage context of the[Conformance expectation extension](http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html) - multipleAnd - multipleOr - comparator - modifier - chain",
+                builtin: false,
+                documentation: "http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-date"
+            }
+        },
 
         {
-        name: "type",
-        active: true,
-        information: {
-            description: "**Specific type of encounter**  **NOTE**: This US Core SearchParameter definition extends the usage context of the[Conformance expectation extension](http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html) - multipleAnd - multipleOr - comparator - modifier - chain",
-            builtin: false,
-            documentation: "http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-type"
-        }
-    },
+            name: "type",
+            active: true,
+            information: {
+                description: "**Specific type of encounter**  **NOTE**: This US Core SearchParameter definition extends the usage context of the[Conformance expectation extension](http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html) - multipleAnd - multipleOr - comparator - modifier - chain",
+                builtin: false,
+                documentation: "http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-type"
+            }
+        },
 
         {
-        name: "identifier",
-        active: true,
-        information: {
-            description: "**Identifier(s) by which this encounter is known**  **NOTE**: This US Core SearchParameter definition extends the usage context of the[Conformance expectation extension](http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html) - multipleAnd - multipleOr - comparator - modifier - chain",
-            builtin: false,
-            documentation: "http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-identifier"
+            name: "identifier",
+            active: true,
+            information: {
+                description: "**Identifier(s) by which this encounter is known**  **NOTE**: This US Core SearchParameter definition extends the usage context of the[Conformance expectation extension](http://hl7.org/fhir/R4/extension-capabilitystatement-expectation.html) - multipleAnd - multipleOr - comparator - modifier - chain",
+                builtin: false,
+                documentation: "http://hl7.org/fhir/us/core/SearchParameter/us-core-encounter-identifier"
+            }
         }
-    }
 
     ],
     operations: [

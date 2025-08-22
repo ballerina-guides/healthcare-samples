@@ -455,7 +455,7 @@ dependencies = [
 
 [[package]]
 org = "ballerinax"
-name = "health.fhir.r4.uscore501"
+name = "health.fhir.r4.uscore700"
 version = "2.0.0"
 dependencies = [
 	{org = "ballerina", name = "constraint"},
@@ -463,7 +463,7 @@ dependencies = [
 	{org = "ballerinax", name = "health.fhir.r4"}
 ]
 modules = [
-	{org = "ballerinax", packageName = "health.fhir.r4.uscore501", moduleName = "health.fhir.r4.uscore501"}
+	{org = "ballerinax", packageName = "health.fhir.r4.uscore700", moduleName = "health.fhir.r4.uscore700"}
 ]
 
 [[package]]
@@ -538,7 +538,7 @@ dependencies = [
 	{org = "ballerina", name = "persist"},
 	{org = "ballerina", name = "sql"},
 	{org = "ballerinax", name = "health.fhir.r4"},
-	{org = "ballerinax", name = "health.fhir.r4.uscore501"},
+	{org = "ballerinax", name = "health.fhir.r4.uscore700"},
 	{org = "ballerinax", name = "health.fhirr4"},
 	{org = "ballerinax", name = "mysql"},
 	{org = "ballerinax", name = "mysql.driver"},

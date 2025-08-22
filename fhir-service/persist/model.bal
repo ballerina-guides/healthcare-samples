@@ -19,7 +19,7 @@ public type EncounterData record {|
     readonly string id;
 
     // FHIR: Encounter.status
-    string status;  // required
+    string status; // required
 
     // FHIR: Encounter.class.system
     string? encounterClassSystem;
@@ -34,7 +34,7 @@ public type EncounterData record {|
     string? typeText;
 
     // FHIR: Encounter.subject.reference
-    string subjectRef;  // required
+    string subjectRef; // required
 
     // FHIR: Encounter.period.start
     string? periodStart;

@@ -7,12 +7,12 @@ user = "root"
 password = "2@Django&"
 database = "patient_data"
 
-[config]
-status = "active"
-kind = "instance"
-implementationDescription = "FHIR server"
-fhirVersion = "4.0.1"
-format = ["json"]
-title = "WSO2 FHIR Server"
-publisher = "WSO2"
-description = "Demo implementation"
+# [config]
+# status = "active"
+# kind = "instance"
+# implementationDescription = "FHIR server"
+# fhirVersion = "4.0.1"
+# format = ["json"]
+# title = "WSO2 FHIR Server"
+# publisher = "WSO2"
+# description = "Demo implementation"

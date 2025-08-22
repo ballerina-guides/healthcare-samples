@@ -1,27 +1,28 @@
 import fhir_service.db;
 
-import ballerinax/health.fhir.r4.uscore501;
+import ballerinax/health.fhir.r4.uscore700;
 
 // #############################################################################################################################################
 // #                                               Mapper methods                                                                              #
 // #############################################################################################################################################
 
-public isolated function mapDbDataToFHIR(db:PatientDataOptionalized patient) returns uscore501:USCorePatientProfile => {
+public isolated function mapDbDataToFHIR(db:PatientDataOptionalized patient) returns uscore700:USCorePatientProfile => {
     identifier: [],
-    gender: <uscore501:USCorePatientProfileGender>(patient?.gender?:"unkown"),
-    name: [{
-        given: mapNameToGiven(patient?.name)
-    }],
+    gender: <uscore700:USCorePatientProfileGender>(patient?.gender ?: "unkown"),
+    name: [
+        {
+            given: mapNameToGiven(patient?.name)
+        }
+    ],
     birthDate: patient?.birthDate
 };
 
-public isolated function mapFhirToDbData(uscore501:USCorePatientProfile patient) returns db:PatientDataInsert => {
+public isolated function mapFhirToDbData(uscore700:USCorePatientProfile patient) returns db:PatientDataInsert => {
     gender: patient.gender,
     name: mapGivenToName(patient.name[0].given),
     id: generatePatientId(),
     birthDate: patient.birthDate
 };
-
 
 // #############################################################################################################################################
 // #                                               Util methods                                                                                #
