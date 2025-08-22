@@ -17,6 +17,7 @@
 import fhir_service.db;
 
 import ballerinax/health.fhir.r4.uscore700;
+import ballerina/uuid;
 
 // #############################################################################################################################################
 // #                                               Mapper methods                                                                              #
@@ -36,7 +37,7 @@ public isolated function mapDbDataToFHIR(db:PatientDataOptionalized patient) ret
 public isolated function mapFhirToDbData(uscore700:USCorePatientProfile patient) returns db:PatientDataInsert => {
     gender: patient.gender,
     name: mapGivenToName(patient.name[0].given),
-    id: generatePatientId(),
+    id: uuid:createType1AsString(),
     birthDate: patient.birthDate
 };
 
