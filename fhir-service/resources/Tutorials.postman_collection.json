@@ -1,0 +1,299 @@
+{
+	"info": {
+		"_postman_id": "20dea1bd-4a07-48db-9dc4-ea27d7d21207",
+		"name": "Tutorials",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "2846974",
+		"_collection_link": "https://interstellar-rocket-8666.postman.co/workspace/386bcae4-e9e6-4881-8a97-dddf0e72d922/collection/2846974-20dea1bd-4a07-48db-9dc4-ea27d7d21207?action=share&source=collection_link&creator=2846974"
+	},
+	"item": [
+		{
+			"name": "Direct Service",
+			"item": [
+				{
+					"name": "Get Patient By Id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true,
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/fhir+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"resourceType\": \"Patient\",\n    \"gender\": \"male\",\n    \"address\": [\n        {\n            \"state\": \"Western\"\n        }\n    ],\n    \"name\": [\n        {\n            \"family\": \"Sam\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serviceBaseURL}}/Patient/550e8400-e29b-41d4-a716-446655440000",
+							"host": [
+								"{{serviceBaseURL}}"
+							],
+							"path": [
+								"Patient",
+								"550e8400-e29b-41d4-a716-446655440000"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Capability Statement API",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{serviceBaseURL}}/metadata",
+							"host": [
+								"{{serviceBaseURL}}"
+							],
+							"path": [
+								"metadata"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Patient",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/fhir+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"resourceType\": \"Patient\",\n    \"gender\": \"male\",\n    \"identifier\": [],\n    \"birthDate\": \"1985-05-10\",\n    \"name\": [\n        {\n            \"given\": [\n                \"John Doe\"\n            ]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{serviceBaseURL}}/Patient",
+							"host": [
+								"{{serviceBaseURL}}"
+							],
+							"path": [
+								"Patient"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Secured API",
+			"item": [
+				{
+					"name": "Get Patient By Id",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "clientSecret",
+									"value": "HC0tTncDFYTUnW285Nj_XTNhk5ca",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "RlwpXT5QUKcaWkoS5BFPhabX6W8a",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://localhost:9443/oauth2/token",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "Demo App",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{securedServerBaseURL}}/Patient/01f07f32-6189-1d28-a562-ffaa9e50818e",
+							"host": [
+								"{{securedServerBaseURL}}"
+							],
+							"path": [
+								"Patient",
+								"01f07f32-6189-1d28-a562-ffaa9e50818e"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Capability Statement API",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{securedServerBaseURL}}/metadata",
+							"host": [
+								"{{securedServerBaseURL}}"
+							],
+							"path": [
+								"metadata"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Patient",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"content-type": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "clientSecret",
+									"value": "HC0tTncDFYTUnW285Nj_XTNhk5ca",
+									"type": "string"
+								},
+								{
+									"key": "clientId",
+									"value": "RlwpXT5QUKcaWkoS5BFPhabX6W8a",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "https://localhost:9443/oauth2/token",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "Demo App",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/fhir+json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"resourceType\": \"Patient\",\n    \"gender\": \"male\",\n    \"identifier\": [],\n    \"birthDate\": \"1985-05-10\",\n    \"name\": [\n        {\n            \"given\": [\n                \"John Doe\"\n            ]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{securedServerBaseURL}}/Patient",
+							"host": [
+								"{{securedServerBaseURL}}"
+							],
+							"path": [
+								"Patient"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "serviceBaseURL",
+			"value": "http://localhost:9090/fhir/r4"
+		},
+		{
+			"key": "securedServerBaseURL",
+			"value": "https://localhost:8243/api/1.0.0/fhir/r4",
+			"type": "string"
+		}
+	]
+}
