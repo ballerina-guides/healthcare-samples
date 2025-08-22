@@ -4,5 +4,7 @@ name = "fhirpath"
 version = "2.0.0"
 distribution = "2201.12.3"
 
-[build-options]
-observabilityIncluded = true
+[[dependency]]
+org = "ballerinax"
+name = "health.fhir.r4utils.fhirpath"
+version = "2.0.0"

@@ -81,7 +81,7 @@ dependencies = [
 [[package]]
 org = "ballerina"
 name = "http"
-version = "2.14.3"
+version = "2.14.4"
 dependencies = [
 	{org = "ballerina", name = "auth"},
 	{org = "ballerina", name = "cache"},
@@ -186,6 +186,9 @@ name = "lang.regexp"
 version = "0.0.0"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"}
+]
+modules = [
+	{org = "ballerina", packageName = "lang.regexp", moduleName = "lang.regexp"}
 ]
 
 [[package]]
@@ -424,6 +427,7 @@ name = "fhirpath"
 version = "2.0.0"
 dependencies = [
 	{org = "ballerina", name = "io"},
+	{org = "ballerina", name = "lang.regexp"},
 	{org = "ballerinai", name = "observe"},
 	{org = "ballerinax", name = "health.fhir.r4utils.fhirpath"}
 ]
