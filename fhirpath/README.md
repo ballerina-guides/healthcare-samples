@@ -25,12 +25,9 @@ This sample uses the [`ballerinax/health.fhir.r4utils.fhirpath`](https://central
 
 Before running this sample, ensure you have:
 
-1. **Ballerina**: Install Ballerina version 2201.12.3 or later
+**Ballerina**: Install Ballerina version 2201.12.3 or later
    - Download from: https://ballerina.io/downloads/
    - Verify installation: `bal version`
-
-2. **Java**: Ballerina requires Java 17 or later
-   - Verify installation: `java -version`
 
 ## How to Run the Sample
 
