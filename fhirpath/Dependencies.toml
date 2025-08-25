@@ -313,9 +313,6 @@ dependencies = [
 	{org = "ballerina", name = "jballerina.java"},
 	{org = "ballerina", name = "observe"}
 ]
-modules = [
-	{org = "ballerinai", packageName = "observe", moduleName = "observe"}
-]
 
 [[package]]
 org = "ballerinax"
@@ -428,7 +425,6 @@ version = "2.0.0"
 dependencies = [
 	{org = "ballerina", name = "io"},
 	{org = "ballerina", name = "lang.regexp"},
-	{org = "ballerinai", name = "observe"},
 	{org = "ballerinax", name = "health.fhir.r4utils.fhirpath"}
 ]
 modules = [
