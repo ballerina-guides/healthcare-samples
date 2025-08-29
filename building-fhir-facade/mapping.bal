@@ -16,16 +16,22 @@
 
 import fhir_service.db;
 
-import ballerinax/health.fhir.r4.uscore700;
 import ballerina/uuid;
+import ballerinax/health.fhir.r4.uscore311;
 
 // #############################################################################################################################################
 // #                                               Mapper methods                                                                              #
 // #############################################################################################################################################
 
-public isolated function mapDbDataToFHIR(db:PatientDataOptionalized patient) returns uscore700:USCorePatientProfile => {
-    identifier: [],
-    gender: <uscore700:USCorePatientProfileGender>(patient?.gender ?: "unkown"),
+public isolated function mapCustomPatientToFHIR(db:PatientDataOptionalized patient) returns uscore311:USCorePatientProfile => {
+    id: patient?.id ?: uuid:createType1AsString(),
+    identifier: [
+        {
+            system: "http://university-hospital.com/pid",
+            value: patient?.id ?: generatePatientId()
+        }
+    ],
+    gender: <uscore311:USCorePatientProfileGender>(patient?.gender ?: "unkown"),
     name: [
         {
             given: mapNameToGiven(patient?.name)
@@ -34,7 +40,7 @@ public isolated function mapDbDataToFHIR(db:PatientDataOptionalized patient) ret
     birthDate: patient?.birthDate
 };
 
-public isolated function mapFhirToDbData(uscore700:USCorePatientProfile patient) returns db:PatientDataInsert => {
+public isolated function mapFhirToCustomPatient(uscore311:USCorePatientProfile patient) returns db:PatientDataInsert => {
     gender: patient.gender,
     name: mapGivenToName(patient.name[0].given),
     id: uuid:createType1AsString(),

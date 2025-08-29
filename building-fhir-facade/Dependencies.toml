@@ -5,7 +5,7 @@
 
 [ballerina]
 dependencies-toml-version = "2"
-distribution-version = "2201.12.3"
+distribution-version = "2201.12.7"
 
 [[package]]
 org = "ballerina"
@@ -226,6 +226,9 @@ dependencies = [
 	{org = "ballerina", name = "jballerina.java"},
 	{org = "ballerina", name = "lang.value"},
 	{org = "ballerina", name = "observe"}
+]
+modules = [
+	{org = "ballerina", packageName = "log", moduleName = "log"}
 ]
 
 [[package]]
@@ -458,6 +461,19 @@ dependencies = [
 
 [[package]]
 org = "ballerinax"
+name = "health.fhir.r4.uscore311"
+version = "2.0.0"
+dependencies = [
+	{org = "ballerina", name = "constraint"},
+	{org = "ballerina", name = "log"},
+	{org = "ballerinax", name = "health.fhir.r4"}
+]
+modules = [
+	{org = "ballerinax", packageName = "health.fhir.r4.uscore311", moduleName = "health.fhir.r4.uscore311"}
+]
+
+[[package]]
+org = "ballerinax"
 name = "health.fhir.r4.uscore700"
 version = "2.0.0"
 dependencies = [
@@ -538,10 +554,12 @@ version = "1.0.0"
 dependencies = [
 	{org = "ballerina", name = "http"},
 	{org = "ballerina", name = "jballerina.java"},
+	{org = "ballerina", name = "log"},
 	{org = "ballerina", name = "persist"},
 	{org = "ballerina", name = "sql"},
 	{org = "ballerina", name = "uuid"},
 	{org = "ballerinax", name = "health.fhir.r4"},
+	{org = "ballerinax", name = "health.fhir.r4.uscore311"},
 	{org = "ballerinax", name = "health.fhir.r4.uscore700"},
 	{org = "ballerinax", name = "health.fhirr4"},
 	{org = "ballerinax", name = "mysql"},
