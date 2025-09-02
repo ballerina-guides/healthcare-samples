@@ -3,9 +3,3 @@ org = "healthcare_samples"
 name = "fhirpath"
 version = "3.0.0"
 distribution = "2201.12.9"
-
-[[dependency]]
-org = "ballerinax"
-name = "health.fhir.r4utils.fhirpath"
-version = "3.0.0"
-repository="local"
