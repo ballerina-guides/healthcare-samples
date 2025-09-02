@@ -42,53 +42,57 @@ json patient = {
 };
 
 public function extract() {
-    io:println("[EXTRACT] >>>");
+    io:println("\n", "Extract values from FHIR resource");
+    io:println("------------------------------------------------------------------");
 
-    // 1. Extract simple value - patient's id
-    json|error id = fhirpath:getFhirPathValues(patient, "Patient.id");
-    io:println("1. Patient ID: ", id);
+    // Extract simple value - patient's id
+    json|error id = fhirpath:getValuesFromFhirPath(patient, "Patient.id");
+    io:println("Patient ID(s): ", id);
 
-    // 2. Extract multiple values from an array - all the given names of the patient
-    json|error allGivenNames = fhirpath:getFhirPathValues(patient, "Patient.name.given");
-    io:println("2. All given names: ", allGivenNames);
+    // Extract multiple values from an array - all the given names of the patient
+    json|error allGivenNames = fhirpath:getValuesFromFhirPath(patient, "Patient.name.given");
+    io:println("Given name(s): ", allGivenNames);
 
-    // 3. Extract a specific value from an array - phone number of the patient
-    json|error phoneNumber = fhirpath:getFhirPathValues(patient, "Patient.telecom[0].value");
-    io:println("3. Phone Number: ", phoneNumber);
+    // Extract a specific value from an array - phone number of the patient
+    json|error phoneNumber = fhirpath:getValuesFromFhirPath(patient, "Patient.telecom[0].value");
+    io:println("Phone Number(s): ", phoneNumber);
 }
 
 public function modify() {
-    io:println("[MODIFY] >>>");
+    io:println("\n", "Modify values in FHIR resource");
+    io:println("------------------------------------------------------------------");
 
-    // 1. Modify a simple value - patient's active status
-    json|error activeModifiedPatient = fhirpath:setFhirPathValues(patient.clone(), "Patient.active", false);
-    io:println("1. Active status modified patient: ", activeModifiedPatient);
+    // Modify a simple value - patient's active status
+    json|error activeModifiedPatient = fhirpath:setValuesToFhirPath(patient.clone(), "Patient.active", false);
+    io:println("Active status modified patient resource:", "\n", activeModifiedPatient, "\n");
 
-    // 2. Modify multiple values in an array - Mask patient's given names
+    // Modify multiple values in an array - Mask patient's given names
     // Since the given name should be an array and we change it to string, it will result in an validation error. We can use the `validateFHIRResource` flag to bypass this.
-    json|error namesMaskedPatient = fhirpath:setFhirPathValues(patient.clone(), "Patient.name.given", "***", validateFHIRResource = false);
-    io:println("2. Names masked patient: ", namesMaskedPatient);
+    json|error namesMaskedPatient = fhirpath:setValuesToFhirPath(patient.clone(), "Patient.name.given", "***");
+    io:println("Names masked patient resource:", "\n", namesMaskedPatient, "\n");
 
-    // 3. Change a specific value - patient's phone number
-    json|error phoneNumberModifiedPatient = fhirpath:setFhirPathValues(patient.clone(), "Patient.telecom[0].value", "000-000-0000");
-    io:println("3. Phone number modified patient: ", phoneNumberModifiedPatient);
+    // Change a specific value - patient's phone number
+    json|error phoneNumberModifiedPatient = fhirpath:setValuesToFhirPath(patient.clone(), "Patient.telecom[0].value", "000-000-0000");
+    io:println("Phone number modified patient resource:", "\n", phoneNumberModifiedPatient, "\n");
 }
 
 public function createNewPath() {
-    io:println("[NEW PATH CREATION] >>>");
+    io:println("Create new FHIR path");
+    io:println("------------------------------------------------------------------");
 
-    // 1. Create a new FHIR path - add a age of the patient
+    // Create a new FHIR path - add a age of the patient
     // Add `createMissingPaths = true` in Config.toml under [ballerinax.health.fhir.r4utils.fhirpath] to create missing paths
-    json|error newAgePatient = fhirpath:setFhirPathValues(patient.clone(), "Patient.age", 30, validateFHIRResource = false);
-    io:println("1. New age added patient: ", newAgePatient);
+    json|error newAgePatient = fhirpath:setValuesToFhirPath(patient.clone(), "Patient.age", 30);
+    io:println("New age added patient:", "\n", newAgePatient, "\n");
 }
 
 public function redact() {
-    io:println("[REDACT] >>>");
+    io:println("Redact values in FHIR resource");
+    io:println("------------------------------------------------------------------");
 
-    // 1. Redact multiple values - patient's contact information
-    json|error contactInfoRemovedPatient = fhirpath:setFhirPathValues(patient.clone(), "Patient.telecom.value", ());
-    io:println("1. Contact information removed patient: ", contactInfoRemovedPatient);
+    // Redact multiple values - patient's contact information
+    json|error contactInfoRemovedPatient = fhirpath:setValuesToFhirPath(patient.clone(), "Patient.telecom.value", ());
+    io:println("Contact information removed patient:", "\n", contactInfoRemovedPatient, "\n");
 }
 
 isolated function removeDayFromDate(json value) returns json|fhirpath:ModificationFunctionError {
@@ -97,7 +101,7 @@ isolated function removeDayFromDate(json value) returns json|fhirpath:Modificati
         // Split the string using "-" delimiter with regexp
         regexp:RegExp|error regexResult = regexp:fromString("-");
         if regexResult is error {
-            return fhirpath:createModificationFunctionError("Error creating regex pattern", (), value.toString());
+            return error("Error creating regex pattern", value = value.toString());
         }
 
         string[] parts = regexp:split(regexResult, value);
@@ -106,20 +110,22 @@ isolated function removeDayFromDate(json value) returns json|fhirpath:Modificati
             return parts[0] + "-" + parts[1];
         }
         // If the date format is not as expected, return an error
-        return fhirpath:createModificationFunctionError("Invalid date format", (), value.toString());
+        return error("Invalid date format", value = value.toString());
     }
     return value;
 }
 
 public function customModification() {
-    io:println("[CUSTOM MODIFICATION] >>>");
+    io:println("Custom modifications to FHIR resource");
+    io:println("------------------------------------------------------------------");
 
-    // 1. Read and modify a value - remove day from patient's birthday
-    json|error birthdayModifiedPatient = fhirpath:setFhirPathValues(patient.clone(), "Patient.birthDate", removeDayFromDate);
-    io:println("1. Birthday modified patient: ", birthdayModifiedPatient);
+    // Read and modify a value - remove day from patient's birthday
+    json|error birthdayModifiedPatient = fhirpath:setValuesToFhirPath(patient.clone(), "Patient.birthDate", removeDayFromDate);
+    io:println("Birthday modified patient:", "\n", birthdayModifiedPatient, "\n");
 }
 
 public function main() {
+    io:println("Original Patient Resource:", "\n", patient);
     extract();
     modify();
     createNewPath();

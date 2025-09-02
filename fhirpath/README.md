@@ -1,6 +1,6 @@
 # FHIRPath Sample
 
-This sample demonstrates how to use the Ballerina FHIRPath library to extract, modify, and manipulate FHIR resources using FHIRPath expressions.
+This sample demonstrates how to use the Ballerina FHIRPath library v3.0.0 to extract, modify, and manipulate FHIR resources using FHIRPath expressions.
 
 ## Overview
 
@@ -18,8 +18,8 @@ This sample uses the [`ballerinax/health.fhir.r4utils.fhirpath`](https://central
 
 ### Key Functions Demonstrated
 
-- `fhirpath:getFhirPathValues()` - Extract values from FHIR resources
-- `fhirpath:setFhirPathValues()` - Set/modify values in FHIR resources
+- `fhirpath:getValuesFromFhirPath()` - Extract values from FHIR resources
+- `fhirpath:setValuesToFhirPath()` - Set/modify values in FHIR resources
 
 ## Prerequisites
 
@@ -73,34 +73,41 @@ The sample demonstrates the following operations on a Patient FHIR resource:
 When you run the sample, you'll see output demonstrating each operation:
 
 ```
-[EXTRACT] >>>
-1. Patient ID: ["12345"]
-2. All given names: [["John","Michael"],["Johnny"]]
-3. Phone Number: ["+1-555-123-4567"]
+Original Patient Resource:
+{"resourceType":"Patient","id":"12345","active":true,"name":[{"use":"official","family":"Smith","given":["John","Michael"]},{"use":"usual","given":["Johnny"]}],"gender":"male","birthDate":"1985-06-15","address":[{"use":"home","line":["123 Main Street","Apt 4B"],"city":"Springfield","state":"IL","postalCode":"62701"}],"telecom":[{"system":"phone","value":"+1-555-123-4567","use":"mobile"},{"system":"email","value":"john.smith@email.com"}]}
 
-[MODIFY] >>>
-1. Active status modified patient: {...}
-2. Names masked patient: {...}
-3. Phone number modified patient: {...}
+Extract values from FHIR resource
+------------------------------------------------------------------
+Patient ID(s): ["12345"]
+Given name(s): [["John","Michael"],["Johnny"]]
+Phone Number(s): ["+1-555-123-4567"]
 
-[NEW PATH CREATION] >>>
-1. New age added patient: {...}
+Modify values in FHIR resource
+------------------------------------------------------------------
+Active status modified patient resource:
+{"resourceType":"Patient","id":"12345","active":false,"name":[{"use":"official","family":"Smith","given":["John","Michael"]},{"use":"usual","given":["Johnny"]}],"gender":"male","birthDate":"1985-06-15","address":[{"use":"home","line":["123 Main Street","Apt 4B"],"city":"Springfield","state":"IL","postalCode":"62701"}],"telecom":[{"system":"phone","value":"+1-555-123-4567","use":"mobile"},{"system":"email","value":"john.smith@email.com"}]}
 
-[REDACT] >>>
-1. Contact information removed patient: {...}
+Names masked patient resource:
+{"resourceType":"Patient","id":"12345","active":true,"name":[{"use":"official","family":"Smith","given":"***"},{"use":"usual","given":"***"}],"gender":"male","birthDate":"1985-06-15","address":[{"use":"home","line":["123 Main Street","Apt 4B"],"city":"Springfield","state":"IL","postalCode":"62701"}],"telecom":[{"system":"phone","value":"+1-555-123-4567","use":"mobile"},{"system":"email","value":"john.smith@email.com"}]}
 
-[CUSTOM MODIFICATION] >>>
-1. Birthday modified patient: {...}
+Phone number modified patient resource:
+{"resourceType":"Patient","id":"12345","active":true,"name":[{"use":"official","family":"Smith","given":["John","Michael"]},{"use":"usual","given":["Johnny"]}],"gender":"male","birthDate":"1985-06-15","address":[{"use":"home","line":["123 Main Street","Apt 4B"],"city":"Springfield","state":"IL","postalCode":"62701"}],"telecom":[{"system":"phone","value":"000-000-0000","use":"mobile"},{"system":"email","value":"john.smith@email.com"}]}
+
+Create new FHIR path
+------------------------------------------------------------------
+New age added patient:
+{"resourceType":"Patient","id":"12345","active":true,"name":[{"use":"official","family":"Smith","given":["John","Michael"]},{"use":"usual","given":["Johnny"]}],"gender":"male","birthDate":"1985-06-15","address":[{"use":"home","line":["123 Main Street","Apt 4B"],"city":"Springfield","state":"IL","postalCode":"62701"}],"telecom":[{"system":"phone","value":"+1-555-123-4567","use":"mobile"},{"system":"email","value":"john.smith@email.com"}],"age":30}
+
+Redact values in FHIR resource
+------------------------------------------------------------------
+Contact information removed patient:
+{"resourceType":"Patient","id":"12345","active":true,"name":[{"use":"official","family":"Smith","given":["John","Michael"]},{"use":"usual","given":["Johnny"]}],"gender":"male","birthDate":"1985-06-15","address":[{"use":"home","line":["123 Main Street","Apt 4B"],"city":"Springfield","state":"IL","postalCode":"62701"}],"telecom":[{"system":"phone","use":"mobile"},{"system":"email"}]}
+
+Custom modifications to FHIR resource
+------------------------------------------------------------------
+Birthday modified patient:
+{"resourceType":"Patient","id":"12345","active":true,"name":[{"use":"official","family":"Smith","given":["John","Michael"]},{"use":"usual","given":["Johnny"]}],"gender":"male","birthDate":"1985-06","address":[{"use":"home","line":["123 Main Street","Apt 4B"],"city":"Springfield","state":"IL","postalCode":"62701"}],"telecom":[{"system":"phone","value":"+1-555-123-4567","use":"mobile"},{"system":"email","value":"john.smith@email.com"}]}
 ```
-
-## Configuration Options
-
-The FHIRPath package supports various configuration options:
-
-- `validateFHIRResource`: Set to `false` to bypass FHIR resource validation
-- `createMissingPaths`: Set to `true` to automatically create missing paths in the resource structure
-
-Refer to the [package documentation](https://central.ballerina.io/ballerinax/health.fhir.r4utils.fhirpath) for complete configuration options.
 
 ## Use Cases
 
