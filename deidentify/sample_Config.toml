@@ -1,10 +1,13 @@
 [ballerinax.health.fhir.r4utils.deidentify]
 cryptoHashKey = "your-secure-hash-key"
 encryptKey = "your-secure-encrypt-key"
-skipOnError = false
+skipOnError = true
 inputFHIRResourceValidation = false
 outputFHIRResourceValidation = false
 
+[ballerina.ai.wso2ProviderConfig]
+serviceUrl = "https://dev-tools.wso2.com/ballerina-copilot/v2.0"
+accessToken = "<ACCESS_TOKEN>"
 
 # Patient ID is encrypted so that it can be re-identified later if needed
 [[ballerinax.health.fhir.r4utils.deidentify.rules]]
@@ -46,3 +49,8 @@ operation = "encrypt"
 [[ballerinax.health.fhir.r4utils.deidentify.rules]]
 fhirPaths = ["Patient.generalPractitioner.display", "Patient.managingOrganization.display", "Patient.link.other.display"]
 operation = "mask"
+
+# De-identify text fields using an AI model. Need a correct access token under [ballerina.ai.wso2ProviderConfig] to work
+[[ballerinax.health.fhir.r4utils.deidentify.rules]]
+fhirPaths = ["Patient.text.div"]
+operation = "aiDeIdentify"

@@ -1,5 +1,7 @@
+import ballerina/ai;
 import ballerina/io;
 import ballerina/lang.regexp;
+import ballerina/log;
 import ballerinax/health.fhir.r4utils.deidentify;
 import ballerinax/health.fhir.r4utils.fhirpath;
 
@@ -53,6 +55,39 @@ public isolated function maskPartially(json value) returns json|fhirpath:Modific
     return "**MASKED**";
 }
 
+# Custom function to de-identify text using an AI model
+#
+# + value - The original text value
+# + return - The modified text value
+public isolated function deIdentifyTextWithAI(json value) returns json|fhirpath:ModificationFunctionError {
+    if value is string {
+        string|error deIdentifiedText = deIdentifyTextWithDefaultModelProvider(value);
+        if deIdentifiedText is error {
+            return error("Error during AI de-identification.", value = value.toString());
+        }
+        return deIdentifiedText.toJson();
+    }
+    return error("Value is not a string.", value = value.toString());
+}
+
+# Function to call an AI model for de-identification.
+# Need to configure WSO2 Provider in Config.toml under [ballerina.ai.wso2ProviderConfig] to work.
+# Shortcut command to configure default model provider in VS Code: @command:ballerina.configureWso2DefaultModelProvider,
+# which will add the  configuration with serviceUrl and accessToken.
+# More Info: https://central.ballerina.io/ballerina/ai/latest
+#
+# + text - The original text to be de-identified
+# + return - The de-identified text or an error
+public isolated function deIdentifyTextWithDefaultModelProvider(string text) returns string|error {
+    ai:Wso2ModelProvider model = check ai:getDefaultModelProvider();
+    string|ai:Error deIdentifiedText = model->generate(
+        `De-identify the following text by removing or masking any personally identifiable information (PII): ${text}`);
+    if deIdentifiedText is string {
+        log:printWarn(`Deidentified with AI. Please review for accuracy.`);
+    }
+    return deIdentifiedText;
+}
+
 public function main() {
 
     // Using Custom Functions for de-identification
@@ -60,7 +95,8 @@ public function main() {
     // Create a map of custom operations
     map<fhirpath:ModificationFunction> customOperations = {
         "removeDay": removeDayFromDate,
-        "partialMask": maskPartially
+        "partialMask": maskPartially,
+        "aiDeIdentify": deIdentifyTextWithAI
     };
 
     // Provide de-identify rules programmatically
@@ -72,7 +108,7 @@ public function main() {
         },
         // Remove elements which are not needed
         {
-            "fhirPaths": ["Patient.text", "Patient.identifier", "Patient.name", "Patient.photo", "Patient.contact", "Patient.link", "Patient.extension[1]"],
+            "fhirPaths": ["Patient.identifier", "Patient.name", "Patient.photo", "Patient.contact", "Patient.link", "Patient.extension[1]"],
             "operation": "redact"
         },
         // De-identify address
@@ -104,6 +140,11 @@ public function main() {
         {
             "fhirPaths": ["Patient.generalPractitioner.display", "Patient.managingOrganization.display", "Patient.link.other.display"],
             "operation": "mask"
+        },
+        // De-identify text fields using an AI model. Please review the results for accuracy.
+        {
+            "fhirPaths": ["Patient.text.div"],
+            "operation": "aiDeIdentify"
         }
     ];
 

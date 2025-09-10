@@ -9,6 +9,34 @@ distribution-version = "2201.12.9"
 
 [[package]]
 org = "ballerina"
+name = "ai"
+version = "1.5.1"
+dependencies = [
+	{org = "ballerina", name = "constraint"},
+	{org = "ballerina", name = "data.jsondata"},
+	{org = "ballerina", name = "data.xmldata"},
+	{org = "ballerina", name = "file"},
+	{org = "ballerina", name = "http"},
+	{org = "ballerina", name = "io"},
+	{org = "ballerina", name = "jballerina.java"},
+	{org = "ballerina", name = "lang.array"},
+	{org = "ballerina", name = "lang.regexp"},
+	{org = "ballerina", name = "log"},
+	{org = "ballerina", name = "math.vector"},
+	{org = "ballerina", name = "mcp"},
+	{org = "ballerina", name = "mime"},
+	{org = "ballerina", name = "time"},
+	{org = "ballerina", name = "url"},
+	{org = "ballerina", name = "uuid"},
+	{org = "ballerina", name = "yaml"}
+]
+modules = [
+	{org = "ballerina", packageName = "ai", moduleName = "ai"},
+	{org = "ballerina", packageName = "ai", moduleName = "ai.intelligence"}
+]
+
+[[package]]
+org = "ballerina"
 name = "auth"
 version = "2.14.0"
 dependencies = [
@@ -51,6 +79,15 @@ dependencies = [
 org = "ballerina"
 name = "data.jsondata"
 version = "1.1.1"
+dependencies = [
+	{org = "ballerina", name = "jballerina.java"},
+	{org = "ballerina", name = "lang.object"}
+]
+
+[[package]]
+org = "ballerina"
+name = "data.xmldata"
+version = "1.5.1"
 dependencies = [
 	{org = "ballerina", name = "jballerina.java"},
 	{org = "ballerina", name = "lang.object"}
@@ -226,6 +263,24 @@ dependencies = [
 	{org = "ballerina", name = "lang.value"},
 	{org = "ballerina", name = "observe"}
 ]
+modules = [
+	{org = "ballerina", packageName = "log", moduleName = "log"}
+]
+
+[[package]]
+org = "ballerina"
+name = "math.vector"
+version = "1.2.0"
+
+[[package]]
+org = "ballerina"
+name = "mcp"
+version = "0.9.1"
+dependencies = [
+	{org = "ballerina", name = "http"},
+	{org = "ballerina", name = "jballerina.java"},
+	{org = "ballerina", name = "uuid"}
+]
 
 [[package]]
 org = "ballerina"
@@ -303,6 +358,18 @@ dependencies = [
 	{org = "ballerina", name = "jballerina.java"},
 	{org = "ballerina", name = "lang.int"},
 	{org = "ballerina", name = "time"}
+]
+
+[[package]]
+org = "ballerina"
+name = "yaml"
+version = "0.8.0"
+dependencies = [
+	{org = "ballerina", name = "file"},
+	{org = "ballerina", name = "io"},
+	{org = "ballerina", name = "lang.array"},
+	{org = "ballerina", name = "lang.regexp"},
+	{org = "ballerina", name = "log"}
 ]
 
 [[package]]
@@ -437,8 +504,10 @@ org = "healthcare_samples"
 name = "deidentify"
 version = "1.0.0"
 dependencies = [
+	{org = "ballerina", name = "ai"},
 	{org = "ballerina", name = "io"},
 	{org = "ballerina", name = "lang.regexp"},
+	{org = "ballerina", name = "log"},
 	{org = "ballerinax", name = "health.fhir.r4utils.deidentify"},
 	{org = "ballerinax", name = "health.fhir.r4utils.fhirpath"}
 ]

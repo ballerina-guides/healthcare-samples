@@ -287,6 +287,24 @@ deidentify:DeIdentifyRule[] rules = [
 json|deidentify:DeIdentificationError result = deidentify:deIdentify(patient, operations = customOperations, deIdentifyRules = rules);
 ```
 
+#### Using AI capabilities for De-identification
+
+You can use AI-based de-identification for text fields by creating a custom function that integrates with an AI model. This sample includes an example function (`deIdentifyTextWithAI`) and a rule (`aiDeIdentify`) for de-identifying text fields using a default WSO2 model provider.
+
+In order to work with the AI model, you need to configure the default WSO2 model provider. Add the following to your `Config.toml`:
+
+```toml
+[ballerina.ai.wso2ProviderConfig]
+serviceUrl = "https://dev-tools.wso2.com/ballerina-copilot/v2.0"
+accessToken = "<ACCESS_TOKEN>"
+```
+
+OR you can use a shortcut command to configure default model provider in VS Code: `@command:ballerina.configureWso2DefaultModelProvider`, which will add the  configuration with serviceUrl and accessToken. The Wso2DefaultModelProvider is only for testing and evaluation purposes. For production use, you should set up your own AI model provider.
+
+If you want to use a different AI model provider, you can implement your own custom function that calls the desired AI service and register it similarly to the other custom functions. For more ballerina AI capabilities, refer to the [Ballerina AI usecases](https://ballerina.io/use-cases/ai/).
+
+⚠️ Note: AI-based de-identification is non-deterministic and may not be accurate. Please review the results manually.
+
 ## Running the Sample
 
 ### 1. Run the Main Sample
