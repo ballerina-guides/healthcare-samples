@@ -1,0 +1,56 @@
+[ballerinax.health.fhir.r4utils.deidentify]
+cryptoHashKey = "your-secure-hash-key"
+encryptKey = "your-secure-encrypt-key"
+skipOnError = true
+inputFHIRResourceValidation = false
+outputFHIRResourceValidation = false
+
+[ballerina.ai.wso2ProviderConfig]
+serviceUrl = "https://dev-tools.wso2.com/ballerina-copilot/v2.0"
+accessToken = "<ACCESS_TOKEN>"
+
+# Patient ID is encrypted so that it can be re-identified later if needed
+[[ballerinax.health.fhir.r4utils.deidentify.rules]]
+fhirPaths = ["Patient.id"]
+operation = "encrypt"
+
+# Remove elements which are not needed
+[[ballerinax.health.fhir.r4utils.deidentify.rules]]
+fhirPaths = ["Patient.text", "Patient.identifier", "Patient.name", "Patient.photo", "Patient.contact", "Patient.link", "Patient.extension[1]"]
+operation = "redact"
+
+# De-identify address
+# Remove location identifiers
+[[ballerinax.health.fhir.r4utils.deidentify.rules]]
+fhirPaths = ["Patient.address.line", "Patient.address.city", "Patient.address.district"]
+operation = "redact"
+
+# Hash postal code without removing, so we could use it to check if two patients are coming from the same area, without knowing the exact area
+[[ballerinax.health.fhir.r4utils.deidentify.rules]]
+fhirPaths = ["Patient.address.postalCode"]
+operation = "hash"
+
+# Mask phone numbers partially, so that the value is still recognizable as a phone number with the number format preserved, but not identifiable
+[[ballerinax.health.fhir.r4utils.deidentify.rules]]
+fhirPaths = ["Patient.telecom.value"]
+operation = "hapartialMasksh"
+
+# The birth date is important for age calculations, so we keep the year and month, but remove the day to reduce identifiability
+[[ballerinax.health.fhir.r4utils.deidentify.rules]]
+fhirPaths = ["Patient.birthDate"]
+operation = "removeDay"
+
+# Encrypt references to other resources, so that they can be re-identified later if needed or for record linkage
+[[ballerinax.health.fhir.r4utils.deidentify.rules]]
+fhirPaths = ["Patient.generalPractitioner.reference", "Patient.managingOrganization.reference", "Patient.link.other.reference"]
+operation = "encrypt"
+
+# Mask display names of references to other resources
+[[ballerinax.health.fhir.r4utils.deidentify.rules]]
+fhirPaths = ["Patient.generalPractitioner.display", "Patient.managingOrganization.display", "Patient.link.other.display"]
+operation = "mask"
+
+# De-identify text fields using an AI model. Need a correct access token under [ballerina.ai.wso2ProviderConfig] to work
+[[ballerinax.health.fhir.r4utils.deidentify.rules]]
+fhirPaths = ["Patient.text.div"]
+operation = "aiDeIdentify"
