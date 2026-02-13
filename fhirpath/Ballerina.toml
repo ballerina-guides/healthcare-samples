@@ -1,5 +1,5 @@
 [package]
 org = "healthcare_samples"
 name = "fhirpath"
-version = "3.0.0"
+version = "3.1.0"
 distribution = "2201.12.9"

@@ -95,7 +95,7 @@ public function redact() {
     io:println("Contact information removed patient:", "\n", contactInfoRemovedPatient, "\n");
 }
 
-isolated function removeDayFromDate(json value) returns json|fhirpath:ModificationFunctionError {
+isolated function removeDayFromDate(json value) returns json|error {
     if value is string {
         // Assuming the date is in the format "YYYY-MM-DD"
         // Split the string using "-" delimiter with regexp
