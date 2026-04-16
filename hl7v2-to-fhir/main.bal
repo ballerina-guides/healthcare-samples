@@ -4,7 +4,7 @@ import ballerinax/health.fhir.r4.international401;
 import ballerinax/health.hl7v2 as hl7;
 import ballerinax/health.hl7v23;
 import ballerinax/health.hl7v2commons as hl7types;
-import ballerinax/health.hl7v2.utils.v2tofhirr4;
+import ballerinax/health.hl7v23.utils.v2tofhirr4;
 
 final string msg =
 "MSH|^~\\&|ADT1|GOOD HEALTH HOSPITAL|GHH LAB, INC.|GOOD HEALTH" +

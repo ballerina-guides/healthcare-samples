@@ -3,18 +3,18 @@ name: Daily build
 
 on:
   schedule:
-    - cron:  '30 20 * * *'    # 02:00 AM in LK time (GMT+5:30)
+    - cron: "30 20 * * *" # 02:00 AM in LK time (GMT+5:30)
   workflow_dispatch:
 
 env:
-  BALLERINA_VERSION: 2201.12.3
+  BALLERINA_VERSION: 2201.12.10
 
 jobs:
   build:
     name: Build Ballerina Projects
     runs-on: ubuntu-latest
     env:
-       JAVA_OPTS: -Xmx4G
+      JAVA_OPTS: -Xmx4G
 
     steps:
       - name: Checkout Repository
@@ -45,4 +45,3 @@ jobs:
               popd
             fi
           done
-          
