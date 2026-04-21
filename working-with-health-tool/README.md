@@ -1,40 +1,28 @@
-# Generate a Ballerina Package using the Health Tool and develop an FHIR API
+# Working with the Ballerina Health Tool
 
-You can generate a Ballerina package using the Ballerina-Health Tool for a given FHIR implementation guide.
+The [Ballerina Health CLI tool](https://ballerina.io/learn/health-tool/) (`bal health`) takes a folder of FHIR Implementation Guide (IG) JSON definitions and emits ready-to-use Ballerina artifacts. This directory contains two samples that cover the two modes the tool supports:
 
-This guide shows how to generate a package and use that generated package in a REST API.
+| Mode | Sample | Output |
+| --- | --- | --- |
+| `package` | [package-generation](./package-generation/README.md) | A Ballerina **library package** of typed records for every profile, value set, and code system in the IG — ready to depend on from any Ballerina project. The sample uses the CARIN BB IG and consumes the generated package from a small HTTP service. |
+| `template` | [template-generation](./template-generation/README.md) | A Ballerina **service project** scaffolded for the IG — listeners, `ResourceAPIConfig` entries, and stub handlers for each profiled resource. The sample uses the US Core IG. |
 
-## Set up the pre-requisites
+Pick `package` when you want typed records for resource construction and parsing, and `template` when you want to bootstrap a whole FHIR service for an IG.
 
-- Ballerina [Swan Lake Update 7](https://ballerina.io/downloads/) or higher
-- Ballerina Health Tool installed by executing the command below.
-  > `bal tool pull health`
-- Clone this repository to your local machine.
+## Prerequisites
 
-## Generate the Ballerina package using the Health Tool
+- [Ballerina Swan Lake](https://ballerina.io/downloads/) Update 7 (2201.7.0) or later.
+- Install the Health CLI tool once:
 
-1. Navigate to the cloned `working_with_health_tool` directory.
+  ```bash
+  bal tool pull health
+  ```
 
-  > `cd working_with_health_tool`
+## Running a Sample
 
-2. Generate the package.
+Follow the README inside each sub-directory — both walk through the exact `bal health fhir` command and the steps to run the resulting project.
 
-  > `bal health fhir -m package -o ig_carinbb/gen --org-name healthcare_samples --package-name carinbb_package ig_carinbb/definitions/`
+## References
 
-  > **Info:** The `definitions` directory contains the JSON definitions of the CarinBB IG.
-
-  This will generate a Ballerina package in the `ig_carinbb/gen` directory.
-
-## Build and push the package
-
-1. Navigate to the `ig_carinbb/gen/carinbb_package` directory. 
-
-2. Run `bal pack` and then `bal push --repository=local`.
-
-## Run the project
-
-1. Navigate to the `carinbb_patient_service` directory (i.e., where the `Ballerina.toml` file exists).
-
-2. Run `bal run`.
-
-> For more information, go to [Health tool (FHIR/HL7)](https://ballerina.io/learn/health-tool/).
+- [Ballerina Health Tool documentation](https://ballerina.io/learn/health-tool/)
+- [FHIR Implementation Guides registry](https://www.fhir.org/guides/registry/)
